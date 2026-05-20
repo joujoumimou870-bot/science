@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>درس 2 — الحواس الخمس</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
+  <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
+</nav>
+
+<div class="lesson-layout">
+  <div class="scene-panel">
+    <canvas id="canvas-lesson-2"></canvas>
+    <div class="label-overlay" id="label-overlay"></div>
+    <button type="button" class="btn-auto-rotate" id="btn-auto-rotate">تدوير تلقائي</button>
+    <div class="part-info-box" id="part-info" style="display:none">
+      <button type="button" class="part-info-close" onclick="hidePartInfo()">✕</button>
+      <div class="part-info-name" id="part-name"></div>
+      <div class="part-info-desc" id="part-desc"></div>
+    </div>
+    <div class="scene-hint">انقر على حاسّة • اسحب للتدوير</div>
+  </div>
+
+  <div class="info-panel">
+    <div class="lesson-header">
+      <div class="lesson-meta">
+        <span class="grade-badge badge-4">الصف الرابع</span>
+        <span class="lesson-num-badge">الدرس 2</span>
+      </div>
+      <h1 class="lesson-title">الحواس الخمس</h1>
+      <p style="color:var(--text-muted);font-size:.9rem">العين · الأذن · الأنف · اللسان · الجلد</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">📖 شرح الدرس</div>
+      <p>خمس حواس تربطنا بالعالم: <strong>البصر</strong>، <strong>السمع</strong>، <strong>الشم</strong>، <strong>التذوق</strong>، <strong>اللمس</strong>. كلّها ترسل إشارات إلى الدماغ.</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">✦ معلومات مهمة</div>
+      <ul class="fact-list">
+        <li>العين تميّز ملايين الألوان.</li>
+        <li>الأذن للسمع والتوازن.</li>
+        <li>الأنف للروائح والحماية.</li>
+        <li>اللسان يميّز أربع طعمات أساسية.</li>
+        <li>الجلد أكبر عضو في الجسم.</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">🌟 هل تعلم؟</div>
+      <p>مساحة جلد الشخص البالغ نحو مترَيْن مربعَيْن!</p>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-label">🎯 اختبر نفسك</div>
+      <div class="quiz-question">أيّ حاسّة تساعدنا على التعرّف على الروائح؟</div>
+      <div class="quiz-options">
+        <button class="quiz-btn" data-correct="false">البصر</button>
+        <button class="quiz-btn" data-correct="false">السمع</button>
+        <button class="quiz-btn" data-correct="true" data-fb-ok="أحسنت! ✅ الشمّ عبر الأنف.">الشمّ</button>
+        <button class="quiz-btn" data-correct="false">التذوق</button>
+      </div>
+      <div class="quiz-feedback" id="quiz-fb"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/scene-utils.js"></script>
+<script>
+initScene('canvas-lesson-2', function(group, THREE, api) {
+  var brain = new THREE.Group();
+  var bg = matPhong(0xd4a5a5);
+  [[0,0.35,0],[0.25,0.15,0.1],[-0.22,0.1,-0.08],[0.1,-0.1,0.2],[-0.15,-0.05,-0.15]].forEach(function(p) {
+    var b = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), bg);
+    b.position.set(p[0], p[1], p[2]);
+    brain.add(b);
+  });
+  var brainMain = new THREE.Mesh(new THREE.SphereGeometry(0.32, 20, 20), bg);
+  brain.add(brainMain);
+  tagPartGroup(brain.children, 'الدماغ 🧠', 'مركز التحكم: يستقبل إشارات الحواس الخمس ويحلّلها.');
+  brain.position.y = 0.2;
+  group.add(brain);
+
+  var eyeG = new THREE.Group();
+  eyeG.position.set(-1.2, 0.5, 0.3);
+  var eyeW = mkSphere(0.35, 0xffffff);
+  var iris = mkSphere(0.18, 0x2563eb);
+  iris.position.z = 0.28;
+  var pupil = mkSphere(0.08, 0x111111);
+  pupil.position.z = 0.38;
+  eyeG.add(eyeW, iris, pupil);
+  tagPartGroup([eyeW, iris, pupil], 'العين 👁', 'تستقبل الضوء وترسل صوراً للدماغ. تميّز ملايين الألوان.');
+  group.add(eyeG);
+
+  var earG = new THREE.Group();
+  earG.position.set(1.2, 0.4, 0);
+  var earRim = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.08, 12, 32, Math.PI), matPhong(0xf472b6));
+  earRim.rotation.z = Math.PI / 2;
+  var canal = mkCyl(0.06, 0.08, 0.35, 0xf9a8d4);
+  canal.rotation.x = Math.PI / 2;
+  canal.position.z = 0.2;
+  earG.add(earRim, canal);
+  tagPart(earRim, 'الأذن 👂', 'تلتقط الأصوات وتحوّلها لإشارات عصبية، وتساعد في التوازن.');
+  tagPart(canal, 'الأذن 👂', 'تلتقط الأصوات وتحوّلها لإشارات عصبية، وتساعد في التوازن.');
+  group.add(earG);
+
+  var noseG = new THREE.Group();
+  noseG.position.set(0, -0.5, 0.5);
+  var n1 = mkSphere(0.12, 0xfbbf24);
+  n1.position.x = -0.1;
+  var n2 = mkSphere(0.12, 0xfbbf24);
+  n2.position.x = 0.1;
+  noseG.add(n1, n2);
+  tagPart(n1, 'الأنف 👃', 'خلايا شمّية تميّز الروائح وتحمي من الغازات الضارة.');
+  tagPart(n2, 'الأنف 👃', 'خلايا شمّية تميّز الروائح وتحمي من الغازات الضارة.');
+  group.add(noseG);
+
+  var tongue = mkSphere(0.28, 0xf87171);
+  tongue.scale.set(0.9, 0.35, 0.6);
+  tongue.position.set(0.5, -1.0, 0.2);
+  tagPart(tongue, 'اللسان 👅', 'براعم الذوق تميّز: حلو، مالح، مرّ، حامض.');
+  group.add(tongue);
+
+  var skin = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.1, 0.7),
+    matPhong(0xffcba4, { shininess: 20 })
+  );
+  skin.position.set(-0.6, -0.9, 0);
+  skin.rotation.y = 0.4;
+  tagPart(skin, 'الجلد ✋', 'أكبر عضو؛ يشعر بالحرارة والبرودة والضغط والألم.');
+  group.add(skin);
+
+  api.labels.add(eyeG, 'العين 👁');
+  api.labels.add(earG, 'الأذن 👂');
+  api.labels.add(noseG, 'الأنف 👃');
+}, { cameraZ: 5.5 });
+
+bindQuiz();
+</script>
+</body>
+</html>

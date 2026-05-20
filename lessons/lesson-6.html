@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>درس 6 — جهاز الدوران</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
+  <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
+</nav>
+
+<div class="lesson-layout">
+  <div class="scene-panel">
+    <canvas id="canvas-lesson-6"></canvas>
+    <div class="label-overlay" id="label-overlay"></div>
+    <button type="button" class="btn-auto-rotate" id="btn-auto-rotate">تدوير تلقائي</button>
+    <div class="part-info-box" id="part-info" style="display:none">
+      <button type="button" class="part-info-close" onclick="hidePartInfo()">✕</button>
+      <div class="part-info-name" id="part-name"></div>
+      <div class="part-info-desc" id="part-desc"></div>
+    </div>
+    <div class="scene-hint">انقر على القلب أو الأوعية</div>
+  </div>
+
+  <div class="info-panel">
+    <div class="lesson-header">
+      <div class="lesson-meta">
+        <span class="grade-badge badge-5">الصف الخامس</span>
+        <span class="lesson-num-badge">الدرس 6</span>
+      </div>
+      <h1 class="lesson-title">جهاز الدوران (القلب والشرايين)</h1>
+      <p style="color:var(--text-muted);font-size:.9rem">القلب · الشرايين · الأوردة</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">📖 شرح الدرس</div>
+      <p><strong>جهاز الدوران</strong> ينقل الدم: القلب يضخّه عبر <strong>الشرايين</strong> إلى الأعضاء، ثم يعود عبر <strong>الأوردة</strong>.</p>
+      <p>الدم يحمل الأكسجين والغذاء وينقل الفضلات.</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">✦ معلومات مهمة</div>
+      <ul class="fact-list">
+        <li>الشرايين: من القلب إلى الجسم.</li>
+        <li>الأوردة: من الجسم إلى القلب.</li>
+        <li>الشعيرات: مكان تبادل الغازات.</li>
+        <li>طول الأوعية نحو 100,000 كم.</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">🌟 هل تعلم؟</div>
+      <p>يمرّ الدم بكامل الجسم في أقل من دقيقة عند الراحة!</p>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-label">🎯 اختبر نفسك</div>
+      <div class="quiz-question">ما الأوعية التي تنقل الدم من القلب إلى الأعضاء؟</div>
+      <div class="quiz-options">
+        <button class="quiz-btn" data-correct="false">الأوردة</button>
+        <button class="quiz-btn" data-correct="false">الشعيرات</button>
+        <button class="quiz-btn" data-correct="true" data-fb-ok="أحسنت! ✅ الشرايين تنقل الدم من القلب.">الشرايين</button>
+        <button class="quiz-btn" data-correct="false">الأقنية اللمفاوية</button>
+      </div>
+      <div class="quiz-feedback" id="quiz-fb"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/scene-utils.js"></script>
+<script>
+initScene('canvas-lesson-6', function(group, THREE, api) {
+  var heart = buildHeart(group);
+  var vesselUd = {
+    nameAr: 'الشرايين والأوردة',
+    descAr: 'شبكة أنابيب: الشرايين تحمل الدم من القلب، والأوردة تعيده. الشعيرات تربطهما عند الأعضاء.'
+  };
+  for (var i = 0; i < 5; i++) {
+    var a = (i / 5) * Math.PI * 2;
+    var col = i % 2 === 0 ? 0xef4444 : 0x3b82f6;
+    var v = mkCyl(0.05, 0.03, 1.2, col);
+    v.rotation.z = a + Math.PI / 2;
+    v.position.set(Math.cos(a) * 1.2, Math.sin(a) * 1.2, 0);
+    tagPart(v, vesselUd.nameAr, vesselUd.descAr);
+    group.add(v);
+  }
+  api.labels.add(heart, 'القلب ❤️', new THREE.Vector3(0, 0.8, 0));
+}, { cameraZ: 5 });
+
+bindQuiz();
+</script>
+</body>
+</html>

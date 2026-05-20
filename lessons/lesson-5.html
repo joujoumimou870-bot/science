@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>درس 5 — الجهاز التنفسي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
+  <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
+</nav>
+
+<div class="lesson-layout">
+  <div class="scene-panel">
+    <canvas id="canvas-lesson-5"></canvas>
+    <div class="label-overlay" id="label-overlay"></div>
+    <button type="button" class="btn-auto-rotate" id="btn-auto-rotate">تدوير تلقائي</button>
+    <div class="part-info-box" id="part-info" style="display:none">
+      <button type="button" class="part-info-close" onclick="hidePartInfo()">✕</button>
+      <div class="part-info-name" id="part-name"></div>
+      <div class="part-info-desc" id="part-desc"></div>
+    </div>
+    <div class="scene-hint">انقر على عضو • شاهد الرئتين تتنفّسان</div>
+  </div>
+
+  <div class="info-panel">
+    <div class="lesson-header">
+      <div class="lesson-meta">
+        <span class="grade-badge badge-5">الصف الخامس</span>
+        <span class="lesson-num-badge">الدرس 5</span>
+      </div>
+      <h1 class="lesson-title">الجهاز التنفسي ووظيفته</h1>
+      <p style="color:var(--text-muted);font-size:.9rem">الأنف · القصبة · الرئتان</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">📖 شرح الدرس</div>
+      <p>الجهاز التنفسي يُدخل <strong>الأكسجين</strong> ويُخرج <strong>ثاني أكسيد الكربون</strong>. يمرّ الهواء من الأنف والفم عبر القصبة الهوائية إلى الرئتين.</p>
+      <p>داخل الرئتين ملايين الحويصلات حيث يتبادل الدم الغازات مع الهواء.</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">✦ معلومات مهمة</div>
+      <ul class="fact-list">
+        <li>15–20 نفساً في الدقيقة عند الراحة.</li>
+        <li>11,000 لتر هواء يومياً تقريباً.</li>
+        <li>300 مليون حويصلة في الرئتين.</li>
+        <li>الحجاب الحاجز يحرّك الصدر عند التنفّس.</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">🌟 هل تعلم؟</div>
+      <p>سطح تبادل الغازات في الرئتين يساوي مساحة ملعب تنس!</p>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-label">🎯 اختبر نفسك</div>
+      <div class="quiz-question">ما الغاز الذي تمتصّه الرئتان من الهواء؟</div>
+      <div class="quiz-options">
+        <button class="quiz-btn" data-correct="false">ثاني أكسيد الكربون</button>
+        <button class="quiz-btn" data-correct="false">النيتروجين</button>
+        <button class="quiz-btn" data-correct="true" data-fb-ok="أحسنت! ✅ الرئتان تمتصّان الأكسجين.">الأكسجين</button>
+        <button class="quiz-btn" data-correct="false">البخار</button>
+      </div>
+      <div class="quiz-feedback" id="quiz-fb"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/scene-utils.js"></script>
+<script>
+var lungsRef;
+
+initScene('canvas-lesson-5', function(group, THREE, api) {
+  var nose = mkSphere(0.2, 0xfde68a);
+  nose.position.y = 2.1;
+  tagPart(nose, 'الأنف 👃', 'مدخل الهواء الذي يُرشّح ويُدفّئ الهواء قبل وصوله للرئتين.');
+  group.add(nose);
+
+  var trach = mkCyl(0.12, 0.12, 1.35, 0xfde68a);
+  trach.position.y = 1.25;
+  tagPart(trach, 'القصبة الهوائية', 'أنبوب يصل الحنجرة بالرئتين وينقسم إلى قصبتين رئيسيتين.');
+  group.add(trach);
+
+  lungsRef = buildLungs(group);
+  [-0.55, 0.55].forEach(function(x) {
+    var b = mkCyl(0.08, 0.08, 0.6, 0xfde68a);
+    b.rotation.z = x < 0 ? -0.75 : 0.75;
+    b.position.set(x * 0.9, 0.65, 0);
+    group.add(b);
+  });
+
+  api.labels.add(trach, 'القصبة الهوائية', new THREE.Vector3(0, 0.7, 0));
+  api.labels.add(lungsRef.lungL, 'الرئتان 🫁', new THREE.Vector3(0, 0.4, 0));
+}, { cameraZ: 5.5, onAnimate: function(t) {
+  if (lungsRef) animateLungs(lungsRef.lungL, lungsRef.lungR, t);
+}});
+
+bindQuiz();
+</script>
+</body>
+</html>

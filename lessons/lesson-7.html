@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>درس 7 — الجهاز الهضمي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
+  <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
+</nav>
+
+<div class="lesson-layout">
+  <div class="scene-panel">
+    <canvas id="canvas-lesson-7"></canvas>
+    <div class="label-overlay" id="label-overlay"></div>
+    <button type="button" class="btn-auto-rotate" id="btn-auto-rotate">تدوير تلقائي</button>
+    <div class="part-info-box" id="part-info" style="display:none">
+      <button type="button" class="part-info-close" onclick="hidePartInfo()">✕</button>
+      <div class="part-info-name" id="part-name"></div>
+      <div class="part-info-desc" id="part-desc"></div>
+    </div>
+    <div class="scene-hint">انقر على مرحلة هضم الطعام</div>
+  </div>
+
+  <div class="info-panel">
+    <div class="lesson-header">
+      <div class="lesson-meta">
+        <span class="grade-badge badge-5">الصف الخامس</span>
+        <span class="lesson-num-badge">الدرس 7</span>
+      </div>
+      <h1 class="lesson-title">الجهاز الهضمي</h1>
+      <p style="color:var(--text-muted);font-size:.9rem">الفم · المريء · المعدة · الأمعاء</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">📖 شرح الدرس</div>
+      <p>رحلة الطعام: <strong>الفم</strong> (مضغ) → <strong>المريء</strong> → <strong>المعدة</strong> (هضم) → <strong>الأمعاء</strong> (امتصاص).</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">✦ معلومات مهمة</div>
+      <ul class="fact-list">
+        <li>اللعاب يبدأ هضم النشويات.</li>
+        <li>المعدة حمضية قوية.</li>
+        <li>الأمعاء الدقيقة طويلة مطوية.</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">🌟 هل تعلم؟</div>
+      <p>المعدة تستغرق 2–4 ساعات لهضم الوجبة!</p>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-label">🎯 اختبر نفسك</div>
+      <div class="quiz-question">أين يبدأ مضغ الطعام؟</div>
+      <div class="quiz-options">
+        <button class="quiz-btn" data-correct="false">المعدة</button>
+        <button class="quiz-btn" data-correct="true" data-fb-ok="أحسنت! ✅ في الفم.">الفم</button>
+        <button class="quiz-btn" data-correct="false">الأمعاء</button>
+        <button class="quiz-btn" data-correct="false">الكبد</button>
+      </div>
+      <div class="quiz-feedback" id="quiz-fb"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/scene-utils.js"></script>
+<script>
+initScene('canvas-lesson-7', function(group, THREE, api) {
+  var mouth = mkSphere(0.34, 0xfbbf24);
+  mouth.position.y = 1.65;
+  tagPart(mouth, 'الفم 👄', 'يبدأ هضم الطعام بالمضغ والخلط باللعاب.');
+  group.add(mouth);
+
+  var e1 = mkCyl(0.1, 0.1, 0.65, 0xfde68a);
+  e1.position.y = 1.1;
+  var e2 = mkCyl(0.1, 0.1, 0.65, 0xfde68a);
+  e2.position.y = 0.45;
+  tagPart(e1, 'المريء', 'أنبوب عضلي ينقل اللقمة من الفم إلى المعدة.');
+  tagPart(e2, 'المريء', 'أنبوب عضلي ينقل اللقمة من الفم إلى المعدة.');
+  group.add(e1, e2);
+
+  var stom = buildStomach(group, { y: -0.55 });
+  stom.userData.pulse = { min: 0.96, max: 1.04, speed: 1.5 };
+
+  var int1 = mkSphere(0.24, 0x86efac);
+  int1.scale.set(1.2, 0.7, 0.8);
+  int1.position.y = -1.2;
+  tagPart(int1, 'الأمعاء', 'تمتصّ الغذاء المهضوم وتنقله إلى الدم.');
+  group.add(int1);
+
+  api.labels.add(mouth, 'الفم 👄');
+  api.labels.add(stom, 'المعدة 🫃');
+}, { cameraZ: 5.5 });
+
+bindQuiz();
+</script>
+</body>
+</html>

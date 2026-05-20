@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>درس 3 — أعضاء الجسم الرئيسية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
+  <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
+</nav>
+
+<div class="lesson-layout">
+  <div class="scene-panel">
+    <canvas id="canvas-lesson-3"></canvas>
+    <div class="label-overlay" id="label-overlay"></div>
+    <button type="button" class="btn-auto-rotate" id="btn-auto-rotate">تدوير تلقائي</button>
+    <div class="part-info-box" id="part-info" style="display:none">
+      <button type="button" class="part-info-close" onclick="hidePartInfo()">✕</button>
+      <div class="part-info-name" id="part-name"></div>
+      <div class="part-info-desc" id="part-desc"></div>
+    </div>
+    <div class="scene-hint">انقر على عضو • اسحب للتدوير • دوِّر العجلة للتكبير</div>
+  </div>
+
+  <div class="info-panel">
+    <div class="lesson-header">
+      <div class="lesson-meta">
+        <span class="grade-badge badge-4">الصف الرابع</span>
+        <span class="lesson-num-badge">الدرس 3</span>
+      </div>
+      <h1 class="lesson-title">أعضاء الجسم الرئيسية</h1>
+      <p style="color:var(--text-muted);font-size:.9rem">القلب · الرئتان · المعدة</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">📖 شرح الدرس</div>
+      <p><strong>القلب</strong> مضخّة الجسم — يضخّ الدم إلى كل الأعضاء دون توقّف، ويدقّ نحو 70 مرة في الدقيقة.</p>
+      <p><strong>الرئتان</strong> في القفص الصدري؛ تمتصّان الأكسجين وتُخرجان ثاني أكسيد الكربون عند كل زفير.</p>
+      <p><strong>المعدة</strong> كيس عضلي في البطن يهضم الطعام بالعصارة المعدية.</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">✦ معلومات مهمة</div>
+      <ul class="fact-list">
+        <li>القلب يضخّ نحو 5 لترات من الدم في كل دقيقة.</li>
+        <li>الرئتان تحتويان على أكثر من 300 مليون حويصلة هوائية.</li>
+        <li>المعدة تهضم الطعام خلال ساعتَيْن إلى أربع ساعات.</li>
+        <li>القلب يضخّ ما يُعادل 7,000 لتر من الدم يومياً.</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">🌟 هل تعلم؟</div>
+      <p>يبدأ القلب بالنبض قبل الولادة بأسبوعَيْن، ويستمر نحو 2.5 مليار نبضة خلال حياة الإنسان دون راحة!</p>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-label">🎯 اختبر نفسك</div>
+      <div class="quiz-question">ما وظيفة القلب في جسم الإنسان؟</div>
+      <div class="quiz-options">
+        <button class="quiz-btn" data-correct="false">هضم الطعام</button>
+        <button class="quiz-btn" data-correct="true" data-fb-ok="أحسنت! ✅ القلب يضخّ الدم إلى جميع أعضاء الجسم.">ضخّ الدم</button>
+        <button class="quiz-btn" data-correct="false">التنفّس</button>
+        <button class="quiz-btn" data-correct="false">التفكير</button>
+      </div>
+      <div class="quiz-feedback" id="quiz-fb"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/scene-utils.js"></script>
+<script>
+var lungsRef;
+
+initScene('canvas-lesson-3', function(group, THREE, api) {
+  var heart = buildHeart(group);
+  lungsRef = buildLungs(group);
+  var stom = buildStomach(group);
+  var trach = mkCyl(0.1, 0.1, 0.85, 0xfde68a);
+  trach.position.y = 1.05;
+  tagPart(trach, 'القصبة الهوائية', 'أنبوب ينقل الهواء من الحنجرة إلى الرئتين.');
+  group.add(trach);
+
+  api.labels.add(heart, 'القلب ❤️', new THREE.Vector3(0, 0.75, 0));
+  api.labels.add(lungsRef.lungL, 'الرئتان 🫁', new THREE.Vector3(0, 0.5, 0));
+  api.labels.add(stom, 'المعدة 🫃', new THREE.Vector3(0, 0.35, 0));
+}, {
+  cameraZ: 5,
+  onAnimate: function(t) {
+    if (lungsRef) animateLungs(lungsRef.lungL, lungsRef.lungR, t);
+  }
+});
+
+bindQuiz();
+</script>
+</body>
+</html>

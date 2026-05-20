@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الأحياء بالواقع التفاعلي — دروس تفاعلية ثلاثية الأبعاد</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .home-wrapper { padding-top: 64px; }
+    .stats-row { display:flex; justify-content:center; gap:3rem; margin-top:3rem; position:relative; z-index:1; flex-wrap:wrap; }
+    .stat-item { text-align:center; }
+    .stat-num { font-size:2rem; font-weight:900; color:var(--teal); line-height:1; }
+    .stat-lbl { font-size:.8rem; color:var(--text-muted); margin-top:.2rem; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
+  <ul class="navbar-links">
+    <li><a href="#grade4">الصف الرابع</a></li>
+    <li><a href="#grade5">الصف الخامس</a></li>
+    <li><a href="#grade6">الصف السادس</a></li>
+  </ul>
+</nav>
+
+<div class="home-wrapper">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-badge">🎓 مصمَّم لتلاميذ المرحلة الابتدائية</div>
+    <div class="hero-emoji-row">🔬 🧬 🌱 🫀 🧠</div>
+    <h1 class="hero-title">الأحياء بالواقع التفاعلي</h1>
+    <p class="hero-subtitle">دروس علوم الأحياء بنماذج ثلاثية الأبعاد تفاعلية، مُصمَّمة لتلاميذ المرحلة الابتدائية في تونس</p>
+    <a href="#grade4" class="btn-primary">ابدأ التعلّم ↓</a>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num">12</div><div class="stat-lbl">درساً تفاعلياً</div></div>
+      <div class="stat-item"><div class="stat-num">3</div><div class="stat-lbl">مستويات دراسية</div></div>
+      <div class="stat-item"><div class="stat-num">12</div><div class="stat-lbl">نموذج ثلاثي الأبعاد</div></div>
+    </div>
+  </section>
+
+  <!-- GRADE 4 -->
+  <section class="section grade4" id="grade4">
+    <div class="section-header">
+      <div class="section-icon">📚</div>
+      <div><div class="section-title">الصف الرابع الابتدائي</div><div class="section-subtitle">للتلاميذ من سن 8 إلى 9 سنوات</div></div>
+    </div>
+    <div class="grade-divider"></div>
+    <div class="cards-grid">
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-1.html'">
+        <div class="card-canvas-wrap"><canvas id="cv1"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">1</span><span class="card-title">أجزاء جسم الإنسان</span></div>
+          <span class="grade-badge badge-4">الصف الرابع</span>
+          <p class="card-desc">تعرَّف على الرأس والجذع والأطراف من خلال نموذج ثلاثي الأبعاد مبسَّط.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-2.html'">
+        <div class="card-canvas-wrap"><canvas id="cv2"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">2</span><span class="card-title">الحواس الخمس</span></div>
+          <span class="grade-badge badge-4">الصف الرابع</span>
+          <p class="card-desc">اكتشف العين والأذن والأنف واللسان والجلد بطريقة ممتعة وبصرية.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-3.html'">
+        <div class="card-canvas-wrap"><canvas id="cv3"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">3</span><span class="card-title">أعضاء الجسم الرئيسية</span></div>
+          <span class="grade-badge badge-4">الصف الرابع</span>
+          <p class="card-desc">القلب يضخّ، الرئتان تتنفّسان، والمعدة تهضم.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-4.html'">
+        <div class="card-canvas-wrap"><canvas id="cv4"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">4</span><span class="card-title">دورة حياة النبات</span></div>
+          <span class="grade-badge badge-4">الصف الرابع</span>
+          <p class="card-desc">شاهد كيف تنمو البذرة لتصبح نبتةً مزهرة في رحلة حياة رائعة.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GRADE 5 -->
+  <section class="section grade5" id="grade5">
+    <div class="section-header">
+      <div class="section-icon">🧪</div>
+      <div><div class="section-title">الصف الخامس الابتدائي</div><div class="section-subtitle">للتلاميذ من سن 9 إلى 10 سنوات</div></div>
+    </div>
+    <div class="grade-divider"></div>
+    <div class="cards-grid">
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-5.html'">
+        <div class="card-canvas-wrap"><canvas id="cv5"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">5</span><span class="card-title">الجهاز التنفسي</span></div>
+          <span class="grade-badge badge-5">الصف الخامس</span>
+          <p class="card-desc">استكشف الرئتين والقصبة الهوائية وتعلَّم كيف يتنفّس الجسم.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-6.html'">
+        <div class="card-canvas-wrap"><canvas id="cv6"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">6</span><span class="card-title">جهاز الدوران</span></div>
+          <span class="grade-badge badge-5">الصف الخامس</span>
+          <p class="card-desc">القلب والشرايين والأوردة — شبكة نقل الدم عبر الجسم.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-7.html'">
+        <div class="card-canvas-wrap"><canvas id="cv7"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">7</span><span class="card-title">الجهاز الهضمي</span></div>
+          <span class="grade-badge badge-5">الصف الخامس</span>
+          <p class="card-desc">رحلة الطعام من الفم حتى المعدة والأمعاء.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-8.html'">
+        <div class="card-canvas-wrap"><canvas id="cv8"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">8</span><span class="card-title">تصنيف الكائنات الحية</span></div>
+          <span class="grade-badge badge-5">الصف الخامس</span>
+          <p class="card-desc">نباتات وحيوانات وكائنات دقيقة — مملكات الحياة الثلاث.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GRADE 6 -->
+  <section class="section grade6" id="grade6">
+    <div class="section-header">
+      <div class="section-icon">🧬</div>
+      <div><div class="section-title">الصف السادس الابتدائي</div><div class="section-subtitle">للتلاميذ من سن 10 إلى 11 سنوات</div></div>
+    </div>
+    <div class="grade-divider"></div>
+    <div class="cards-grid">
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-9.html'">
+        <div class="card-canvas-wrap"><canvas id="cv9"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">9</span><span class="card-title">تركيب الخلية</span></div>
+          <span class="grade-badge badge-6">الصف السادس</span>
+          <p class="card-desc">نواة وغشاء وعضيّات — اللَّبنة الأساسية لكل كائن حي.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-10.html'">
+        <div class="card-canvas-wrap"><canvas id="cv10"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">10</span><span class="card-title">وظائف الخلايا</span></div>
+          <span class="grade-badge badge-6">الصف السادس</span>
+          <p class="card-desc">التنفّس والنموّ والتكاثر — وظائف جوهرية تحيا بها الخلية.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-11.html'">
+        <div class="card-canvas-wrap"><canvas id="cv11"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">11</span><span class="card-title">دورة المياه في الطبيعة</span></div>
+          <span class="grade-badge badge-6">الصف السادس</span>
+          <p class="card-desc">من البحر إلى السحاب إلى المطر — رحلة الماء لا تنتهي.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+      <div class="lesson-card" onclick="location.href='lessons/lesson-12.html'">
+        <div class="card-canvas-wrap"><canvas id="cv12"></canvas></div>
+        <div class="card-body">
+          <div class="card-header-row"><span class="card-num">12</span><span class="card-title">السلسلة الغذائية</span></div>
+          <span class="grade-badge badge-6">الصف السادس</span>
+          <p class="card-desc">من المنتج إلى المستهلك إلى المحلِّل — سلسلة الحياة في الطبيعة.</p>
+          <span class="card-link">ادخل الدرس →</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>🔬 <strong>الأحياء بالواقع التفاعلي</strong> — مشروع تخرُّج بحثي</p>
+    <p style="margin-top:.4rem">تأثير استخدام الواقع المختلط في تعليم مفاهيم الأحياء بالمدرسة الابتدائية التونسية</p>
+    <p style="margin-top:.8rem;color:rgba(138,172,200,.5);font-size:.8rem">إشراف: د. فتحي هيشري — إعداد: ملاك &amp; ميارة</p>
+  </footer>
+
+</div>
+
+<!-- THREE.JS — classic script, no modules -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/scene-utils.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  var mat = function(col, em, ei, sh) {
+    return new THREE.MeshPhongMaterial({ color: col, emissive: em||0, emissiveIntensity: ei||0, shininess: sh||60 });
+  };
+
+  /* === 1: Human body === */
+  miniScene('cv1', function(g) {
+    var bm = mat(0xf5deb3);
+    var head = new THREE.Mesh(new THREE.SphereGeometry(0.55,20,20), bm.clone()); head.position.y=1.5; g.add(head);
+    var torso = new THREE.Mesh(new THREE.BoxGeometry(0.9,1.2,0.5), bm.clone()); torso.position.y=0.3; g.add(torso);
+    [-0.75,0.75].forEach(function(x){
+      var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.11,1.0,12), bm.clone());
+      arm.position.set(x,0.25,0); arm.rotation.z=x>0?0.3:-0.3; g.add(arm);
+    });
+    [-0.28,0.28].forEach(function(x){
+      var leg=new THREE.Mesh(new THREE.CylinderGeometry(0.17,0.14,1.3,12), bm.clone()); leg.position.set(x,-1,0); g.add(leg);
+    });
+  });
+
+  /* === 2: Five senses === */
+  miniScene('cv2', function(g) {
+    var data=[{c:0x3b82f6,y:1.2,x:0},{c:0xf472b6,y:0.5,x:1.2},{c:0xfbbf24,y:-0.3,x:-0.5},{c:0xef4444,y:-1,x:0.4},{c:0xa78bfa,y:0.2,x:-1.3}];
+    data.forEach(function(d,i){
+      var s=new THREE.Mesh(new THREE.SphereGeometry(0.38,20,20), mat(d.c,d.c,0.15));
+      s.position.set(d.x,d.y,0);
+      s.userData.floatBase=d.y; s.userData.floatY=1.5+i*0.3; s.userData.floatAmp=0.08; g.add(s);
+    });
+  });
+
+  /* === 3: Heart + lungs + stomach === */
+  miniScene('cv3', function(g) {
+    var heart=new THREE.Mesh(new THREE.TorusGeometry(0.55,0.26,12,40), mat(0xff2244,0xff0000,0.2,80));
+    heart.rotation.x=0.5; heart.userData.pulse={min:0.85,max:1.15,speed:4}; g.add(heart);
+    var lL=new THREE.Mesh(new THREE.SphereGeometry(0.38,16,16), mat(0xffb3c6)); lL.scale.set(1,1.4,0.7); lL.position.set(-0.9,0.2,0); g.add(lL);
+    var lR=new THREE.Mesh(new THREE.SphereGeometry(0.38,16,16), mat(0xffb3c6)); lR.scale.set(1,1.4,0.7); lR.position.set(0.9,0.2,0); g.add(lR);
+    lL.userData.pulse={min:0.9,max:1.08,speed:1.8}; lR.userData.pulse={min:0.9,max:1.08,speed:1.8};
+    var stom=new THREE.Mesh(new THREE.SphereGeometry(0.4,16,16), mat(0x86efac)); stom.scale.set(1.2,0.9,0.8); stom.position.y=-1.1; g.add(stom);
+  });
+
+  /* === 4: Plant === */
+  miniScene('cv4', function(g) {
+    var soil=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,0.3,24), mat(0x8B4513)); soil.position.y=-1.4; g.add(soil);
+    var stem=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.1,1.8,12), mat(0x22c55e)); stem.position.y=-0.4; g.add(stem);
+    for(var i=0;i<3;i++){
+      var leaf=new THREE.Mesh(new THREE.SphereGeometry(0.3,12,12), mat(0x4ade80)); leaf.scale.set(1,0.4,0.6);
+      var a=(i/3)*Math.PI*2; leaf.position.set(Math.cos(a)*0.55,-0.1+i*0.35,Math.sin(a)*0.3); g.add(leaf);
+    }
+    var fc=new THREE.Mesh(new THREE.SphereGeometry(0.28,12,12), mat(0xfbbf24)); fc.position.y=0.75; g.add(fc);
+    for(var j=0;j<6;j++){
+      var p=new THREE.Mesh(new THREE.SphereGeometry(0.16,10,10), mat(0xf9a8d4)); var aj=(j/6)*Math.PI*2;
+      p.position.set(Math.cos(aj)*0.42,0.75,Math.sin(aj)*0.42); g.add(p);
+    }
+  });
+
+  /* === 5: Lungs === */
+  miniScene('cv5', function(g) {
+    var lL=new THREE.Mesh(new THREE.SphereGeometry(0.65,20,20), mat(0xff9eb5)); lL.scale.set(1,1.5,0.8); lL.position.x=-0.85; g.add(lL);
+    var lR=new THREE.Mesh(new THREE.SphereGeometry(0.65,20,20), mat(0xff9eb5)); lR.scale.set(1,1.5,0.8); lR.position.x=0.85; g.add(lR);
+    lL.userData.pulse={min:0.85,max:1.1,speed:1.8}; lR.userData.pulse={min:0.85,max:1.1,speed:1.8};
+    var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,1,12), mat(0xfde68a)); tr.position.y=1.0; g.add(tr);
+  });
+
+  /* === 6: Circulatory === */
+  miniScene('cv6', function(g) {
+    var h=new THREE.Mesh(new THREE.TorusGeometry(0.6,0.28,12,40), mat(0xff2244,0xff0000,0.2,80));
+    h.rotation.x=0.4; h.userData.pulse={min:0.88,max:1.18,speed:4}; g.add(h);
+    for(var i=0;i<5;i++){
+      var a=(i/5)*Math.PI*2;
+      var v=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.04,1.2,8), mat(0xef4444));
+      v.rotation.z=a+Math.PI/2; v.position.set(Math.cos(a)*1.2,Math.sin(a)*1.2,0); g.add(v);
+    }
+  });
+
+  /* === 7: Digestive === */
+  miniScene('cv7', function(g) {
+    [[0xfbbf24,1.7,0.3],[0xfde68a,0.9,0.15],[0xfde68a,0.1,0.15],[0x6ee7b7,-0.7,0.5],[0x86efac,-1.5,0.2]].forEach(function(d){
+      var s=new THREE.Mesh(new THREE.SphereGeometry(d[2],14,14), mat(d[0])); s.position.y=d[1]; g.add(s);
+    });
+    [1.3,0.5].forEach(function(y){ var t=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,0.7,10), mat(0xfde68a)); t.position.y=y; g.add(t); });
+  });
+
+  /* === 8: Three kingdoms === */
+  miniScene('cv8', function(g) {
+    [[0x4ade80,-1.3],[0xfb923c,0],[0xa78bfa,1.3]].forEach(function(d,i){
+      var big=new THREE.Mesh(new THREE.SphereGeometry(0.45,20,20), mat(d[0],d[0],0.15)); big.position.set(d[1],0,0); g.add(big);
+      big.userData.floatBase=0; big.userData.floatY=1.2+i*0.5; big.userData.floatAmp=0.12;
+      for(var j=0;j<3;j++){
+        var s=new THREE.Mesh(new THREE.SphereGeometry(0.15,10,10), mat(d[0])); var a=(j/3)*Math.PI*2;
+        s.position.set(d[1]+Math.cos(a)*0.68,Math.sin(a)*0.55,0); g.add(s);
+      }
+    });
+  });
+
+  /* === 9: Cell === */
+  miniScene('cv9', function(g) {
+    var outer=new THREE.Mesh(new THREE.SphereGeometry(1.4,28,28), new THREE.MeshPhongMaterial({color:0x00c9a7,transparent:true,opacity:0.15})); g.add(outer);
+    var wire=new THREE.Mesh(new THREE.SphereGeometry(1.42,20,20), new THREE.MeshBasicMaterial({color:0x00c9a7,wireframe:true,transparent:true,opacity:0.25})); g.add(wire);
+    var nuc=new THREE.Mesh(new THREE.SphereGeometry(0.5,20,20), mat(0x6366f1,0x6366f1,0.25)); g.add(nuc);
+    var cols=[0xf59e0b,0xec4899,0x34d399,0xfbbf24];
+    for(var i=0;i<6;i++){var a=(i/6)*Math.PI*2; var or=new THREE.Mesh(new THREE.SphereGeometry(0.16,10,10), mat(cols[i%4])); or.position.set(Math.cos(a)*0.85,Math.sin(a)*0.65,Math.cos(a+1)*0.4); g.add(or);}
+  });
+
+  /* === 10: Cell division === */
+  miniScene('cv10', function(g) {
+    var c1=new THREE.Mesh(new THREE.SphereGeometry(0.6,20,20), mat(0x6366f1,0x6366f1,0.2)); c1.position.x=-0.7; g.add(c1);
+    var c2=new THREE.Mesh(new THREE.SphereGeometry(0.6,20,20), mat(0x6366f1,0x6366f1,0.2)); c2.position.x=0.7; g.add(c2);
+    c1.userData.pulse={min:0.85,max:1.1,speed:2}; c2.userData.pulse={min:0.85,max:1.1,speed:2};
+    var n1=new THREE.Mesh(new THREE.SphereGeometry(0.22,14,14), mat(0xec4899)); n1.position.x=-0.7; g.add(n1);
+    var n2=new THREE.Mesh(new THREE.SphereGeometry(0.22,14,14), mat(0xec4899)); n2.position.x=0.7; g.add(n2);
+  });
+
+  /* === 11: Water cycle === */
+  miniScene('cv11', function(g) {
+    var sun=new THREE.Mesh(new THREE.SphereGeometry(0.55,20,20), mat(0xfbbf24,0xfde68a,0.4)); sun.position.set(1.3,1.3,0); sun.userData.pulse={min:0.9,max:1.1,speed:2}; g.add(sun);
+    var cloud=new THREE.Mesh(new THREE.SphereGeometry(0.5,16,16), mat(0xd1d5db)); cloud.position.set(-1,1,0); g.add(cloud);
+    var c2=new THREE.Mesh(new THREE.SphereGeometry(0.38,14,14), mat(0xd1d5db)); c2.position.set(-1.5,1.1,0); g.add(c2);
+    var c3=new THREE.Mesh(new THREE.SphereGeometry(0.35,14,14), mat(0xd1d5db)); c3.position.set(-0.5,1.15,0); g.add(c3);
+    for(var i=0;i<5;i++){
+      var d=new THREE.Mesh(new THREE.SphereGeometry(0.08,8,8), mat(0x60a5fa)); d.position.set(-1.2+i*0.2,0.3-(i%3)*0.3,0);
+      d.userData.floatBase=d.position.y; d.userData.floatY=2+i*0.5; d.userData.floatAmp=0.15; g.add(d);
+    }
+    var ground=new THREE.Mesh(new THREE.PlaneGeometry(3.5,0.3), mat(0x4ade80)); ground.rotation.x=-Math.PI/2; ground.position.y=-1.4; g.add(ground);
+  });
+
+  /* === 12: Food chain === */
+  miniScene('cv12', function(g) {
+    [[0x4ade80,-1.3],[0xfb923c,0],[0xa78bfa,1.3]].forEach(function(d){
+      var s=new THREE.Mesh(new THREE.SphereGeometry(0.45,20,20), mat(d[0],d[0],0.15)); s.position.x=d[1]; s.userData.floatBase=0; s.userData.floatY=1.5; s.userData.floatAmp=0.1; g.add(s);
+    });
+    [-0.65,0.65].forEach(function(x){
+      var arr=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.7,10), mat(0x94a3b8)); arr.rotation.z=Math.PI/2; arr.position.x=x; g.add(arr);
+    });
+  });
+
+});
+</script>
+</body>
+</html>

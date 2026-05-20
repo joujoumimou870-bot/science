@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>درس 12 — السلسلة الغذائية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
+  <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
+</nav>
+
+<div class="lesson-layout">
+  <div class="scene-panel">
+    <canvas id="canvas-lesson-12"></canvas>
+    <div class="label-overlay" id="label-overlay"></div>
+    <button type="button" class="btn-auto-rotate" id="btn-auto-rotate">تدوير تلقائي</button>
+    <div class="part-info-box" id="part-info" style="display:none">
+      <button type="button" class="part-info-close" onclick="hidePartInfo()">✕</button>
+      <div class="part-info-name" id="part-name"></div>
+      <div class="part-info-desc" id="part-desc"></div>
+    </div>
+    <div class="scene-hint">انقر على حلقة السلسلة</div>
+  </div>
+
+  <div class="info-panel">
+    <div class="lesson-header">
+      <div class="lesson-meta">
+        <span class="grade-badge badge-6">الصف السادس</span>
+        <span class="lesson-num-badge">الدرس 12</span>
+      </div>
+      <h1 class="lesson-title">السلسلة الغذائية</h1>
+      <p style="color:var(--text-muted);font-size:.9rem">منتج · مستهلك · محلّل</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">📖 شرح الدرس</div>
+      <p>انتقال الطاقة: <strong>منتج</strong> (نبات) → <strong>مستهلك</strong> (حيوان) → <strong>محلّل</strong> (بكتيريا وفطريات).</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">✦ معلومات مهمة</div>
+      <ul class="fact-list">
+        <li>المنتج يصنع الغذاء بالضوء.</li>
+        <li>المستهلك يأكل المنتج أو مستهلكاً آخر.</li>
+        <li>المحلّل يُفكّك المواد الميتة.</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">🌟 هل تعلم؟</div>
+      <p>يُفقَد 90% من الطاقة بين كلّ مستوى والذي يليه!</p>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-label">🎯 اختبر نفسك</div>
+      <div class="quiz-question">من أين تبدأ السلسلة الغذائية؟</div>
+      <div class="quiz-options">
+        <button class="quiz-btn" data-correct="false">من الحيوانات</button>
+        <button class="quiz-btn" data-correct="true" data-fb-ok="أحسنت! ✅ من النباتات.">من النباتات</button>
+        <button class="quiz-btn" data-correct="false">من المحلّلات</button>
+        <button class="quiz-btn" data-correct="false">من الإنسان</button>
+      </div>
+      <div class="quiz-feedback" id="quiz-fb"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/scene-utils.js"></script>
+<script>
+initScene('canvas-lesson-12', function(group, THREE, api) {
+  var nodes = [
+    { color: 0x4ade80, x: -1.5, nameAr: 'المنتج 🌿', descAr: 'نبات أو طحلب يصنع غذاءه بالتركيب الضوئي — بداية السلسلة دائماً.' },
+    { color: 0xfb923c, x: 0, nameAr: 'المستهلك 🐇', descAr: 'حيوان يأكل المنتج أو مستهلكاً أصغر؛ يحصل على طاقة مخزّنة.' },
+    { color: 0xa78bfa, x: 1.5, nameAr: 'المحلّل 🍄', descAr: 'بكتيريا وفطريات تُحلّل الفضلات وتُعيد العناصر للتربة.' }
+  ];
+  nodes.forEach(function(n) {
+    var m = mkSphere(0.5, n.color, { emissive: n.color, ei: 0.15 });
+    m.position.set(n.x, 0, 0);
+    tagPart(m, n.nameAr, n.descAr);
+    group.add(m);
+    api.labels.add(m, n.nameAr.split(' ')[0]);
+  });
+  [-0.75, 0.75].forEach(function(x) {
+    var shaft = mkCyl(0.05, 0.05, 0.55, 0x94a3b8);
+    shaft.rotation.z = Math.PI / 2;
+    shaft.position.set(x, 0, 0);
+    group.add(shaft);
+    var head = new THREE.Mesh(
+      new THREE.ConeGeometry(0.12, 0.22, 10),
+      matPhong(0xfbbf24)
+    );
+    head.rotation.z = -Math.PI / 2;
+    head.position.set(x + 0.35, 0, 0);
+    group.add(head);
+  });
+}, { cameraZ: 5 });
+
+bindQuiz();
+</script>
+</body>
+</html>

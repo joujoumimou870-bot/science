@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>درس 4 — دورة حياة النبات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
+  <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
+</nav>
+
+<div class="lesson-layout">
+  <div class="scene-panel">
+    <canvas id="canvas-lesson-4"></canvas>
+    <div class="label-overlay" id="label-overlay"></div>
+    <button type="button" class="btn-auto-rotate" id="btn-auto-rotate">تدوير تلقائي</button>
+    <div class="part-info-box" id="part-info" style="display:none">
+      <button type="button" class="part-info-close" onclick="hidePartInfo()">✕</button>
+      <div class="part-info-name" id="part-name"></div>
+      <div class="part-info-desc" id="part-desc"></div>
+    </div>
+    <div class="scene-hint">انقر على مرحلة النمو</div>
+  </div>
+
+  <div class="info-panel">
+    <div class="lesson-header">
+      <div class="lesson-meta">
+        <span class="grade-badge badge-4">الصف الرابع</span>
+        <span class="lesson-num-badge">الدرس 4</span>
+      </div>
+      <h1 class="lesson-title">دورة حياة نبات بسيط</h1>
+      <p style="color:var(--text-muted);font-size:.9rem">بذرة → نبات → زهرة</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">📖 شرح الدرس</div>
+      <p>تبدأ الحياة من <strong>البذرة</strong>، ينمو <strong>الساق والأوراق</strong>، ثم تظهر <strong>الزهرة</strong> للتكاثر.</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">✦ معلومات مهمة</div>
+      <ul class="fact-list">
+        <li>البذرة تحتاج ماء وهواء ودفء.</li>
+        <li>الجذور تمتصّ الماء.</li>
+        <li>الأوراق تصنع الغذاء بالضوء.</li>
+        <li>الزهرة لإنتاج البذور.</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="info-card-title">🌟 هل تعلم؟</div>
+      <p>بذرة عمرها 2000 سنة أُنبتت وأعطت نبتة تمر!</p>
+    </div>
+
+    <div class="quiz-card">
+      <div class="quiz-label">🎯 اختبر نفسك</div>
+      <div class="quiz-question">ماذا تحتاج البذرة لكي تنبت؟</div>
+      <div class="quiz-options">
+        <button class="quiz-btn" data-correct="false">الظلام فقط</button>
+        <button class="quiz-btn" data-correct="true" data-fb-ok="أحسنت! ✅ الماء والهواء والدفء.">الماء والهواء والدفء</button>
+        <button class="quiz-btn" data-correct="false">الثلج</button>
+        <button class="quiz-btn" data-correct="false">الملح</button>
+      </div>
+      <div class="quiz-feedback" id="quiz-fb"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../js/scene-utils.js"></script>
+<script>
+initScene('canvas-lesson-4', function(group, THREE, api) {
+  var soil = mkCyl(1.1, 1.1, 0.35, 0x8B4513);
+  soil.position.y = -1.35;
+  tagPart(soil, 'التربة 🌍', 'تحتفظ بالماء والأملاح وتدعم الجذور.');
+  group.add(soil);
+
+  var seed = mkSphere(0.16, 0x92400e);
+  seed.position.set(0, -1.05, 0.15);
+  tagPart(seed, 'البذرة 🌰', 'تحتوي جنيناً ومخزون غذاء. تحتاج ماء وهواء ودفء للإنبات.');
+  group.add(seed);
+
+  var stem = mkCyl(0.06, 0.09, 1.6, 0x22c55e);
+  stem.position.y = -0.35;
+  tagPart(stem, 'الساق 🌿', 'ينقل الماء والأملاح من الجذور إلى الأوراق والزهرة.');
+  group.add(stem);
+
+  var leaves = [];
+  for (var i = 0; i < 3; i++) {
+    var leaf = mkSphere(0.28, 0x4ade80);
+    leaf.scale.set(1, 0.35, 0.55);
+    var a = (i / 3) * Math.PI * 2;
+    leaf.position.set(Math.cos(a) * 0.5, -0.05 + i * 0.35, Math.sin(a) * 0.25);
+    tagPart(leaf, 'الورقة 🍃', 'تحتوي الكلوروفيل وتصنع الغذاء بالتركيب الضوئي.');
+    group.add(leaf);
+    leaves.push(leaf);
+  }
+
+  var flowerC = mkSphere(0.24, 0xfbbf24);
+  flowerC.position.y = 0.72;
+  tagPart(flowerC, 'الزهرة 🌸', 'تجذب الحشرات وتساعد على التلقيح وإنتاج بذور جديدة.');
+  group.add(flowerC);
+  for (var j = 0; j < 6; j++) {
+    var petal = mkSphere(0.13, 0xf9a8d4);
+    var aj = (j / 6) * Math.PI * 2;
+    petal.position.set(Math.cos(aj) * 0.38, 0.72, Math.sin(aj) * 0.38);
+    tagPart(petal, 'الزهرة 🌸', 'بتلات ملوّنة تحمي الأعضاء التناسلية وتجذب النحل.');
+    group.add(petal);
+  }
+  flowerC.userData.pulse = { min: 0.94, max: 1.06, speed: 2 };
+
+  api.labels.add(seed, 'البذرة 🌰');
+  api.labels.add(flowerC, 'الزهرة 🌸');
+}, { cameraZ: 5 });
+
+bindQuiz();
+</script>
+</body>
+</html>
