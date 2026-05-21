@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+
+<!-- Floating color blobs -->
+<div class="blob-bg" aria-hidden="true">
+  <span></span><span></span><span></span><span></span>
+</div>
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
@@ -71,10 +76,10 @@ initScene('canvas-lesson-5', function(group, THREE, api) {
   var noseG = new THREE.Group();
   noseG.position.set(0, 2.12, 0.25);
   var nBridge = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 20),
-    new THREE.MeshStandardMaterial({ color: 0xf5c090, roughness: 0.55 }));
+    phys({ color: 0xf5c090, roughness: 0.55 }));
   nBridge.scale.set(0.7, 1.1, 0.9);
   var nL = new THREE.Mesh(new THREE.SphereGeometry(0.09, 14, 14),
-    new THREE.MeshStandardMaterial({ color: 0xf0a878, roughness: 0.58 }));
+    phys({ color: 0xf0a878, roughness: 0.58 }));
   nL.position.set(-0.13, -0.10, 0.06);
   var nR = nL.clone(); nR.position.x = 0.13;
   noseG.add(nBridge, nL, nR);
@@ -83,20 +88,20 @@ initScene('canvas-lesson-5', function(group, THREE, api) {
 
   /* Pharynx */
   var pharynx = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.55, 16),
-    new THREE.MeshStandardMaterial({ color: 0xf0a888, roughness: 0.55 }));
+    phys({ color: 0xf0a888, roughness: 0.55 }));
   pharynx.position.y = 1.62;
   tagPart(pharynx, 'البلعوم', 'ممرّ مشترك للهواء والغذاء يصل الأنف والفم بالقصبة والمريء.');
   group.add(pharynx);
 
   /* Larynx (voice box) */
   var larynx = new THREE.Mesh(new THREE.SphereGeometry(0.16, 18, 18),
-    new THREE.MeshStandardMaterial({ color: 0xd4a080, roughness: 0.58, metalness: 0.06 }));
+    phys({ color: 0xd4a080, roughness: 0.58, metalness: 0.06 }));
   larynx.scale.set(0.9, 0.7, 0.85); larynx.position.y = 1.28;
   tagPart(larynx, 'الحنجرة 🗣️', 'تحتوي على الأحبال الصوتية التي تُنتج الصوت. تمنع الطعام من دخول الرئتين.');
   group.add(larynx);
 
   /* Trachea with cartilage rings */
-  var trMat = new THREE.MeshStandardMaterial({ color: 0xfde68a, roughness: 0.42 });
+  var trMat = phys({ color: 0xfde68a, roughness: 0.42 });
   var trCurve = new THREE.CatmullRomCurve3([
     new THREE.Vector3(0, 1.18, 0), new THREE.Vector3(0, 0.85, 0.02),
     new THREE.Vector3(0, 0.52, 0.01), new THREE.Vector3(0, 0.20, 0)
@@ -106,7 +111,7 @@ initScene('canvas-lesson-5', function(group, THREE, api) {
   group.add(trMesh);
 
   /* Cartilage rings on trachea */
-  var ringMat = new THREE.MeshStandardMaterial({ color: 0xf5e090, roughness: 0.40 });
+  var ringMat = phys({ color: 0xf5e090, roughness: 0.40 });
   for (var ri = 0; ri < 8; ri++) {
     var ry = 1.10 - ri * 0.115;
     var ring = new THREE.Mesh(new THREE.TorusGeometry(0.092, 0.022, 8, 20, Math.PI * 1.8), ringMat.clone());
@@ -118,7 +123,7 @@ initScene('canvas-lesson-5', function(group, THREE, api) {
   lungsRef = buildLungs(group);
 
   /* Diaphragm */
-  var diaphMat = new THREE.MeshStandardMaterial({ color: 0xd4a0b0, roughness: 0.60, transparent: true, opacity: 0.40 });
+  var diaphMat = phys({ color: 0xd4a0b0, roughness: 0.60, transparent: true, opacity: 0.40 });
   var diaph = new THREE.Mesh(new THREE.CylinderGeometry(1.02, 1.08, 0.07, 30), diaphMat);
   diaph.position.y = -1.62;
   tagPart(diaph, 'الحجاب الحاجز', 'عضلة تفصل الصدر عن البطن. حركته تُسبّب التنفس: ينزل عند الشهيق ويرتفع عند الزفير.');
@@ -127,7 +132,7 @@ initScene('canvas-lesson-5', function(group, THREE, api) {
   /* Alveoli cluster (tiny sacs) */
   var alveoliG = new THREE.Group();
   alveoliG.position.set(-0.85, -0.50, 0.55);
-  var alvMat = new THREE.MeshStandardMaterial({ color: 0xe89898, roughness: 0.55, transparent: true, opacity: 0.85 });
+  var alvMat = phys({ color: 0xe89898, roughness: 0.55, transparent: true, opacity: 0.85 });
   for (var ai = 0; ai < 12; ai++) {
     var alv = new THREE.Mesh(new THREE.SphereGeometry(0.07 + Math.random()*0.04, 10, 10), alvMat.clone());
     alv.position.set((Math.random()-0.5)*0.35, (Math.random()-0.5)*0.35, (Math.random()-0.5)*0.22);

@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+
+<!-- Floating color blobs -->
+<div class="blob-bg" aria-hidden="true">
+  <span></span><span></span><span></span><span></span>
+</div>
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
@@ -79,7 +84,7 @@ initScene('canvas-lesson-11', function(group, THREE, api) {
   terrainShape.closePath();
   var terrainGeo = new THREE.ExtrudeGeometry(terrainShape, { depth: 0.6, bevelEnabled: false });
   var terrain = new THREE.Mesh(terrainGeo,
-    new THREE.MeshStandardMaterial({ color: 0x3a7a28, roughness: 0.90, metalness: 0 }));
+    phys({ color: 0x3a7a28, roughness: 0.90, metalness: 0 }));
   terrain.position.z = -0.30;
   tagPart(terrain, 'اليابسة 🏔️', 'تستقبل مياه الأمطار وتغذّي الأنهار والمياه الجوفية.');
   group.add(terrain);
@@ -87,11 +92,11 @@ initScene('canvas-lesson-11', function(group, THREE, api) {
   /* Mountain peak */
   var mtnGeo = new THREE.ConeGeometry(0.62, 1.10, 20);
   var mtn = new THREE.Mesh(mtnGeo,
-    new THREE.MeshStandardMaterial({ color: 0x7a6a50, roughness: 0.88 }));
+    phys({ color: 0x7a6a50, roughness: 0.88 }));
   mtn.position.set(1.45, -0.78, 0.08);
   // Snow cap
   var snow = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.35, 16),
-    new THREE.MeshStandardMaterial({ color: 0xf0f4ff, roughness: 0.70 }));
+    phys({ color: 0xf0f4ff, roughness: 0.70 }));
   snow.position.y = 0.48;
   mtn.add(snow);
   tagPart(mtn, 'اليابسة 🏔️', 'الجبال تُجمع الثلج والمطر وتُغذّي الأنهار.');
@@ -105,7 +110,7 @@ initScene('canvas-lesson-11', function(group, THREE, api) {
   }
   seaGeo.computeVertexNormals();
   var sea = new THREE.Mesh(seaGeo,
-    new THREE.MeshStandardMaterial({ color: 0x1a6abf, roughness: 0.08, metalness: 0.28,
+    phys({ color: 0x1a6abf, roughness: 0.08, metalness: 0.28,
       emissive: 0x001128, emissiveIntensity: 0.12, transparent: true, opacity: 0.88 }));
   sea.rotation.x = -Math.PI / 2;
   sea.position.set(-1.05, -1.58, 0.08);
@@ -116,14 +121,14 @@ initScene('canvas-lesson-11', function(group, THREE, api) {
   var sunG = new THREE.Group();
   sunG.position.set(1.55, 1.48, 0.05);
   var sunCore = new THREE.Mesh(new THREE.SphereGeometry(0.48, 28, 28),
-    new THREE.MeshStandardMaterial({ color: 0xffd700, roughness: 0.25, emissive: 0xffa500, emissiveIntensity: 0.80 }));
+    phys({ color: 0xffd700, roughness: 0.25, emissive: 0xffa500, emissiveIntensity: 0.80 }));
   tagPart(sunCore, 'الشمس ☀️', 'حرارة الشمس تُسبّب تبخّر الماء من البحار والأنهار والتربة.');
   sunG.add(sunCore);
   // Sun rays
   for (var sRi = 0; sRi < 8; sRi++) {
     var sAngle = (sRi/8)*Math.PI*2;
     var ray = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.012, 0.45, 6),
-      new THREE.MeshStandardMaterial({ color: 0xffe080, roughness: 0.35, emissive: 0xffaa00, emissiveIntensity: 0.50 }));
+      phys({ color: 0xffe080, roughness: 0.35, emissive: 0xffaa00, emissiveIntensity: 0.50 }));
     ray.position.set(Math.cos(sAngle)*0.65, Math.sin(sAngle)*0.65, 0);
     ray.rotation.z = sAngle;
     sunG.add(ray);
@@ -143,7 +148,7 @@ initScene('canvas-lesson-11', function(group, THREE, api) {
   ];
   cloudParts.forEach(function(cp) {
     var c = new THREE.Mesh(new THREE.SphereGeometry(cp.r, 20, 20),
-      new THREE.MeshStandardMaterial({ color: 0xe8eef5, roughness: 0.85, metalness: 0 }));
+      phys({ color: 0xe8eef5, roughness: 0.85, metalness: 0 }));
     c.position.set(cp.x, cp.y, 0);
     tagPart(c, 'السحاب ☁️', 'بخار الماء يتكاثف ويتجمّع على جزيئات الغبار مُشكّلاً قطرات صغيرة في السحب.');
     cloudG.add(c);
@@ -156,9 +161,9 @@ initScene('canvas-lesson-11', function(group, THREE, api) {
     var evapG = new THREE.Group();
     var ex = -1.85 + ei * 0.32;
     var eBody = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.60, 8),
-      new THREE.MeshStandardMaterial({ color: 0x64b5f6, roughness: 0.40, transparent: true, opacity: 0.70 }));
+      phys({ color: 0x64b5f6, roughness: 0.40, transparent: true, opacity: 0.70 }));
     var eHead = new THREE.Mesh(new THREE.ConeGeometry(0.055, 0.14, 8),
-      new THREE.MeshStandardMaterial({ color: 0x42a5f5, roughness: 0.40, transparent: true, opacity: 0.72 }));
+      phys({ color: 0x42a5f5, roughness: 0.40, transparent: true, opacity: 0.72 }));
     eHead.position.y = 0.37;
     evapG.add(eBody, eHead);
     evapG.position.set(ex, -1.05, 0.10);
@@ -171,7 +176,7 @@ initScene('canvas-lesson-11', function(group, THREE, api) {
   /* Raindrops */
   for (var ri = 0; ri < 14; ri++) {
     var drop = new THREE.Mesh(new THREE.SphereGeometry(0.055, 10, 10),
-      new THREE.MeshStandardMaterial({ color: 0x60a5fa, roughness: 0.15, metalness: 0.10,
+      phys({ color: 0x60a5fa, roughness: 0.15, metalness: 0.10,
         transparent: true, opacity: 0.82, emissive: 0x001a44, emissiveIntensity: 0.12 }));
     drop.scale.set(0.65, 1.30, 0.65);
     drop.position.set(-1.65 + (ri % 7) * 0.28, 0.62 - (ri % 3) * 0.25, (ri % 2)*0.06);
@@ -190,7 +195,7 @@ initScene('canvas-lesson-11', function(group, THREE, api) {
     new THREE.Vector3(-1.05, -1.52, 0.14),
   ]);
   var river = new THREE.Mesh(new THREE.TubeGeometry(riverCurve, 20, 0.065, 10, false),
-    new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.12, metalness: 0.18, transparent: true, opacity: 0.80 }));
+    phys({ color: 0x3b82f6, roughness: 0.12, metalness: 0.18, transparent: true, opacity: 0.80 }));
   tagPart(river, 'الجريان السطحي 🌊', 'الماء يجري على سطح الأرض عائداً إلى البحر والأنهار لإكمال الدورة.');
   group.add(river);
 

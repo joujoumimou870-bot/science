@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+
+<!-- Floating color blobs -->
+<div class="blob-bg" aria-hidden="true">
+  <span></span><span></span><span></span><span></span>
+</div>
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
@@ -68,7 +73,7 @@ function makeLeafShape(size, color) {
   shape.bezierCurveTo(size*.5, size*.6, size*.9, size*.9, 0, size);
   shape.bezierCurveTo(-size*.9, size*.9, -size*.5, size*.6, 0, 0);
   return new THREE.Mesh(new THREE.ShapeGeometry(shape, 14),
-    new THREE.MeshStandardMaterial({ color: color, roughness: 0.62, metalness: 0, side: THREE.DoubleSide }));
+    phys({ color: color, roughness: 0.62, metalness: 0, side: THREE.DoubleSide }));
 }
 
 initScene('canvas-lesson-8', function(group, THREE, api) {
@@ -81,7 +86,7 @@ initScene('canvas-lesson-8', function(group, THREE, api) {
     new THREE.Vector3(-0.04,0,-.01), new THREE.Vector3(0,0.6,0), new THREE.Vector3(0,1.0,0)
   ]);
   var stem = new THREE.Mesh(new THREE.TubeGeometry(stemCurve, 20, 0.060, 10, false),
-    new THREE.MeshStandardMaterial({ color: 0x2e8b28, roughness: 0.60, emissive: 0x001000, emissiveIntensity: 0.06 }));
+    phys({ color: 0x2e8b28, roughness: 0.60, emissive: 0x001000, emissiveIntensity: 0.06 }));
   tagPart(stem, 'النباتات 🌿', 'كائنات منتجة تصنع غذاءها من الضوء والماء وثاني أكسيد الكربون بعملية التركيب الضوئي.');
   plantG.add(stem);
 
@@ -97,13 +102,13 @@ initScene('canvas-lesson-8', function(group, THREE, api) {
 
   // Flower on top
   var flowerCtr = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16),
-    new THREE.MeshStandardMaterial({ color: 0xffd000, roughness: 0.40, emissive: 0x221200, emissiveIntensity: 0.15 }));
+    phys({ color: 0xffd000, roughness: 0.40, emissive: 0x221200, emissiveIntensity: 0.15 }));
   flowerCtr.position.y = 1.08;
   tagPart(flowerCtr, 'النباتات 🌿', 'كائنات منتجة تصنع غذاءها من الضوء والماء.');
   for (var pi = 0; pi < 6; pi++) {
     var pa = (pi/6)*Math.PI*2;
     var petal = new THREE.Mesh(new THREE.SphereGeometry(0.08, 10, 10),
-      new THREE.MeshStandardMaterial({ color: 0xff88bb, roughness: 0.40 }));
+      phys({ color: 0xff88bb, roughness: 0.40 }));
     petal.scale.set(0.8, 0.5, 0.5);
     petal.position.set(Math.cos(pa)*0.22, 1.08, Math.sin(pa)*0.22);
     tagPart(petal, 'النباتات 🌿', 'كائنات منتجة تصنع غذاءها.');
@@ -117,7 +122,7 @@ initScene('canvas-lesson-8', function(group, THREE, api) {
 
   /* ── ANIMAL (centre) — stylised rabbit ── */
   var animalG = new THREE.Group();
-  var skinMat = new THREE.MeshStandardMaterial({ color: 0xdeb887, roughness: 0.65 });
+  var skinMat = phys({ color: 0xdeb887, roughness: 0.65 });
   // Body
   var body = new THREE.Mesh(new THREE.SphereGeometry(0.50, 28, 28), skinMat);
   body.scale.set(0.85, 1.05, 0.80); body.position.y = -0.20;
@@ -129,7 +134,7 @@ initScene('canvas-lesson-8', function(group, THREE, api) {
     var ear = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.58, 12), skinMat.clone());
     ear.position.set(ex, 1.05, -0.04); ear.rotation.z = ex < 0 ? -0.15 : 0.15;
     var earInner = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.52, 10),
-      new THREE.MeshStandardMaterial({ color: 0xffaaaa, roughness: 0.65 }));
+      phys({ color: 0xffaaaa, roughness: 0.65 }));
     earInner.position.y = 0.02;
     ear.add(earInner);
     animalG.add(ear);
@@ -137,17 +142,17 @@ initScene('canvas-lesson-8', function(group, THREE, api) {
   // Eyes
   [-0.12, 0.12].forEach(function(ex) {
     var eye = new THREE.Mesh(new THREE.SphereGeometry(0.042, 10, 10),
-      new THREE.MeshStandardMaterial({ color: 0x330000, roughness: 0.20 }));
+      phys({ color: 0x330000, roughness: 0.20 }));
     eye.position.set(ex, 0.68, 0.28);
     animalG.add(eye);
   });
   // Nose
   var nse = new THREE.Mesh(new THREE.SphereGeometry(0.032, 8, 8),
-    new THREE.MeshStandardMaterial({ color: 0xff8888, roughness: 0.55 }));
+    phys({ color: 0xff8888, roughness: 0.55 }));
   nse.position.set(0, 0.55, 0.32);
   // Tail
   var tail = new THREE.Mesh(new THREE.SphereGeometry(0.12, 14, 14),
-    new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.80 }));
+    phys({ color: 0xffffff, roughness: 0.80 }));
   tail.position.set(0, -0.55, -0.48);
   // Front legs
   [-0.22, 0.22].forEach(function(ex) {
@@ -173,7 +178,7 @@ initScene('canvas-lesson-8', function(group, THREE, api) {
   microG.position.set(1.55, 0, 0);
 
   var bacterium = new THREE.Mesh(new THREE.SphereGeometry(0.45, 32, 32),
-    new THREE.MeshStandardMaterial({ color: 0xa78bfa, roughness: 0.38, metalness: 0.05, emissive: 0x0a0022, emissiveIntensity: 0.15 }));
+    phys({ color: 0xa78bfa, roughness: 0.38, metalness: 0.05, emissive: 0x0a0022, emissiveIntensity: 0.15 }));
   bacterium.scale.set(0.72, 1.38, 0.72);
   tagPart(bacterium, 'الكائنات الدقيقة 🔬', 'بكتيريا وفطريات وفيروسات — أحادية الخلية أو بدائية. منها المفيد (يصنع الجبن، يساعد على الهضم) ومنها الضار.');
   microG.add(bacterium);
@@ -191,7 +196,7 @@ initScene('canvas-lesson-8', function(group, THREE, api) {
     }
     var flagCurve = new THREE.CatmullRomCurve3(flagPts);
     var flag = new THREE.Mesh(new THREE.TubeGeometry(flagCurve, 14, 0.018, 6, false),
-      new THREE.MeshStandardMaterial({ color: 0xc4b5fd, roughness: 0.40 }));
+      phys({ color: 0xc4b5fd, roughness: 0.40 }));
     tagPart(flag, 'الكائنات الدقيقة 🔬', 'أسواط تساعد البكتيريا على الحركة في السوائل.');
     microG.add(flag);
   }
@@ -199,7 +204,7 @@ initScene('canvas-lesson-8', function(group, THREE, api) {
   // Fission bubbles (binary fission)
   for (var bi = 0; bi < 3; bi++) {
     var bud = new THREE.Mesh(new THREE.SphereGeometry(0.15 - bi*0.03, 14, 14),
-      new THREE.MeshStandardMaterial({ color: 0xb9a8ff, roughness: 0.40, transparent: true, opacity: 0.7 - bi*0.15 }));
+      phys({ color: 0xb9a8ff, roughness: 0.40, transparent: true, opacity: 0.7 - bi*0.15 }));
     bud.position.set((Math.random()-0.5)*1.2, 0.6 + bi*0.32, (Math.random()-0.5)*0.5);
     bud.userData.floatSpeed = 0.8 + bi * 0.3; bud.userData.floatBase = bud.position.y; bud.userData.floatAmp = 0.06;
     microG.add(bud);
@@ -211,7 +216,7 @@ initScene('canvas-lesson-8', function(group, THREE, api) {
 
   /* Ground */
   var ground = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 2.8, 0.12, 32),
-    new THREE.MeshStandardMaterial({ color: 0x2a4a18, roughness: 0.90 }));
+    phys({ color: 0x2a4a18, roughness: 0.90 }));
   ground.position.y = -1.32;
   group.add(ground);
 

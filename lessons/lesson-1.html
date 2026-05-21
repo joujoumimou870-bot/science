@@ -9,6 +9,11 @@
 </head>
 <body>
 
+<!-- Floating color blobs -->
+<div class="blob-bg" aria-hidden="true">
+  <span></span><span></span><span></span><span></span>
+</div>
+
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
@@ -77,8 +82,8 @@
 <script src="../js/scene-utils.js"></script>
 <script>
 initScene('canvas-lesson-1', function(group, THREE, api) {
-  var skin  = new THREE.MeshStandardMaterial({ color: 0xf0c8a0, roughness: 0.55, metalness: 0.02, emissive: 0x180800, emissiveIntensity: 0.08 });
-  var skinD = new THREE.MeshStandardMaterial({ color: 0xd4a07a, roughness: 0.58, metalness: 0.02 });
+  var skin  = matSkin(0xf0c8a0);
+  var skinD = matSkinDark(0xd4a07a);
 
   /* ── HEAD ── */
   var headG = new THREE.Group();
@@ -124,7 +129,7 @@ initScene('canvas-lesson-1', function(group, THREE, api) {
 
   /* ── ZONE overlays (interactive, semi-transparent) ── */
   function zone(geo, color, x, y, z, ud, rz, sc) {
-    var mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.5, transparent: true, opacity: 0.35, emissive: color, emissiveIntensity: 0.12 });
+    var mat = phys({ color: color, roughness: 0.45, transparent: true, opacity: 0.38, emissive: color, emissiveIntensity: 0.14, clearcoat: 0.70, clearcoatRoughness: 0.15 });
     var m = new THREE.Mesh(geo, mat);
     m.position.set(x, y, z);
     if (rz) m.rotation.z = rz;

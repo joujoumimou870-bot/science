@@ -9,6 +9,11 @@
 </head>
 <body>
 
+<!-- Floating color blobs -->
+<div class="blob-bg" aria-hidden="true">
+  <span></span><span></span><span></span><span></span>
+</div>
+
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
@@ -80,7 +85,7 @@ function makeLeaf(size, color) {
   shape.bezierCurveTo(size * 0.5, size * 0.6,  size * 0.9, size * 0.9,  0, size);
   shape.bezierCurveTo(-size * 0.9, size * 0.9, -size * 0.5, size * 0.6, 0, 0);
   var geo = new THREE.ShapeGeometry(shape, 18);
-  return new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+  return new THREE.Mesh(geo, phys({
     color: color, roughness: 0.62, metalness: 0, side: THREE.DoubleSide,
     emissive: 0x001a00, emissiveIntensity: 0.08
   }));
@@ -88,7 +93,7 @@ function makeLeaf(size, color) {
 
 initScene('canvas-lesson-4', function(group, THREE, api) {
   /* ── Soil ── */
-  var soilMat = new THREE.MeshStandardMaterial({ color: 0x6b3a1a, roughness: 0.90, metalness: 0 });
+  var soilMat = phys({ color: 0x6b3a1a, roughness: 0.90, metalness: 0 });
   var soil = new THREE.Mesh(new THREE.CylinderGeometry(1.20, 1.25, 0.40, 32), soilMat);
   soil.position.y = -1.65; soil.castShadow = true; soil.receiveShadow = true;
   tagPart(soil, 'التربة 🌍', 'تحتفظ بالماء والأملاح المعدنية وتدعم الجذور وتُوفّر البيئة المناسبة للنمو.');
@@ -96,12 +101,12 @@ initScene('canvas-lesson-4', function(group, THREE, api) {
 
   /* Soil top (darker) */
   var soilTop = new THREE.Mesh(new THREE.CylinderGeometry(1.20, 1.20, 0.05, 32),
-    new THREE.MeshStandardMaterial({ color: 0x4a2810, roughness: 0.95 }));
+    phys({ color: 0x4a2810, roughness: 0.95 }));
   soilTop.position.y = -1.45;
   group.add(soilTop);
 
   /* ── Roots ── */
-  var rootMat = new THREE.MeshStandardMaterial({ color: 0x8b5e3c, roughness: 0.75 });
+  var rootMat = phys({ color: 0x8b5e3c, roughness: 0.75 });
   var rootPts = [
     [[0, -1.45, 0],[0.12, -1.6, 0.08],[0.4, -1.75, 0.18],[0.65, -1.82, 0.12]],
     [[0, -1.45, 0],[-0.15, -1.58, -0.10],[-0.45, -1.72, -0.20],[-0.62, -1.80, -0.08]],
@@ -118,7 +123,7 @@ initScene('canvas-lesson-4', function(group, THREE, api) {
 
   /* ── Seed ── */
   var seed = new THREE.Mesh(new THREE.SphereGeometry(0.18, 20, 20),
-    new THREE.MeshStandardMaterial({ color: 0x9a5a28, roughness: 0.72, metalness: 0.05 }));
+    phys({ color: 0x9a5a28, roughness: 0.72, metalness: 0.05 }));
   seed.scale.set(0.85, 1.15, 0.82);
   seed.position.set(0.32, -1.32, 0.18);
   tagPart(seed, 'البذرة 🌰', 'تحتوي جنيناً ومخزون غذاء. تحتاج ماء وهواء ودفء للإنبات وبداية الحياة.');
@@ -134,7 +139,7 @@ initScene('canvas-lesson-4', function(group, THREE, api) {
     new THREE.Vector3(0.0, 1.15, 0),
   ]);
   var stemMesh = new THREE.Mesh(new THREE.TubeGeometry(stemCurve, 32, 0.058, 12, false),
-    new THREE.MeshStandardMaterial({ color: 0x3d9c40, roughness: 0.58, metalness: 0, emissive: 0x001000, emissiveIntensity: 0.06 }));
+    phys({ color: 0x3d9c40, roughness: 0.58, metalness: 0, emissive: 0x001000, emissiveIntensity: 0.06 }));
   stemMesh.castShadow = true;
   tagPart(stemMesh, 'الساق 🌿', 'ينقل الماء والأملاح من الجذور إلى الأوراق والزهرة. يدعم النبات ويُوجّهه نحو الضوء.');
   group.add(stemMesh);
@@ -156,7 +161,7 @@ initScene('canvas-lesson-4', function(group, THREE, api) {
     leaf.castShadow = true;
     // Midrib
     var midrib = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.012, 0.38, 6),
-      new THREE.MeshStandardMaterial({ color: 0x1a6020, roughness: 0.60 }));
+      phys({ color: 0x1a6020, roughness: 0.60 }));
     midrib.rotation.z = Math.PI / 2;
     midrib.position.set(0, 0.19, 0.002);
     leaf.add(midrib);
@@ -170,7 +175,7 @@ initScene('canvas-lesson-4', function(group, THREE, api) {
   flowerG.position.y = 1.22;
 
   var receptacle = new THREE.Mesh(new THREE.SphereGeometry(0.18, 20, 20),
-    new THREE.MeshStandardMaterial({ color: 0xf5d000, roughness: 0.40, emissive: 0x221800, emissiveIntensity: 0.15 }));
+    phys({ color: 0xf5d000, roughness: 0.40, emissive: 0x221800, emissiveIntensity: 0.15 }));
   flowerG.add(receptacle);
   tagPart(receptacle, 'الزهرة 🌸', 'المَتك والمدقّة يُنتجان حبوب اللقاح ويساعدان على التلقيح وإنتاج بذور جديدة.');
 
@@ -190,10 +195,10 @@ initScene('canvas-lesson-4', function(group, THREE, api) {
   for (var si = 0; si < 6; si++) {
     var stamenAngle = (si / 6) * Math.PI * 2;
     var stamen = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.22, 6),
-      new THREE.MeshStandardMaterial({ color: 0xffe040, roughness: 0.45 }));
+      phys({ color: 0xffe040, roughness: 0.45 }));
     stamen.position.set(Math.cos(stamenAngle)*0.10, 0.11, Math.sin(stamenAngle)*0.10);
     var pollen = new THREE.Mesh(new THREE.SphereGeometry(0.028, 8, 8),
-      new THREE.MeshStandardMaterial({ color: 0xffc000, roughness: 0.50, emissive: 0x221000, emissiveIntensity: 0.20 }));
+      phys({ color: 0xffc000, roughness: 0.50, emissive: 0x221000, emissiveIntensity: 0.20 }));
     pollen.position.y = 0.12;
     stamen.add(pollen);
     flowerG.add(stamen);

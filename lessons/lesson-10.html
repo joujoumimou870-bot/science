@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+
+<!-- Floating color blobs -->
+<div class="blob-bg" aria-hidden="true">
+  <span></span><span></span><span></span><span></span>
+</div>
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
@@ -72,27 +77,27 @@ var SR = { mode: 'resp', cell: null, cellR: null, mit: [], chromatin: [] };
 initScene('canvas-lesson-10', function(group, THREE, api) {
   /* Cell membrane */
   var cellMem = new THREE.Mesh(new THREE.SphereGeometry(1.22, 48, 48),
-    new THREE.MeshStandardMaterial({ color: 0x6366f1, roughness: 0.22, metalness: 0.08,
+    phys({ color: 0x6366f1, roughness: 0.22, metalness: 0.08,
       transparent: true, opacity: 0.18, side: THREE.DoubleSide, emissive: 0x1a1a50, emissiveIntensity: 0.10 }));
   tagPart(cellMem, 'الغشاء الخلوي', 'يحيط بالخلية ويتحكّم في دخول وخروج المواد.');
   group.add(cellMem);
 
   /* Cytoplasm fill */
   SR.cell = new THREE.Mesh(new THREE.SphereGeometry(1.15, 40, 40),
-    new THREE.MeshStandardMaterial({ color: 0x7c80f0, roughness: 0.55, transparent: true, opacity: 0.12 }));
+    phys({ color: 0x7c80f0, roughness: 0.55, transparent: true, opacity: 0.12 }));
   tagPart(SR.cell, 'الخلية 🔬', 'وحدة الحياة الأساسية — تتنفس وتنمو وتنقسم.');
   group.add(SR.cell);
 
   /* Nucleus */
   var nuc = new THREE.Mesh(new THREE.SphereGeometry(0.42, 32, 32),
-    new THREE.MeshStandardMaterial({ color: 0x4f46e5, roughness: 0.28, metalness: 0.08,
+    phys({ color: 0x4f46e5, roughness: 0.28, metalness: 0.08,
       emissive: 0x2a208a, emissiveIntensity: 0.30, transparent: true, opacity: 0.88 }));
   tagPart(nuc, 'النواة 🧬', 'تحتوي DNA وتتحكّم في كل أنشطة الخلية.');
   group.add(nuc);
   api.labels.add(nuc, 'النواة 🧬');
 
   /* Chromatin (DNA coils, visible during division) */
-  var chrMat = new THREE.MeshStandardMaterial({ color: 0xff4488, roughness: 0.35, emissive: 0x220011, emissiveIntensity: 0.30 });
+  var chrMat = phys({ color: 0xff4488, roughness: 0.35, emissive: 0x220011, emissiveIntensity: 0.30 });
   for (var chi = 0; chi < 6; chi++) {
     var chrPts = [];
     var chAngle = (chi/6)*Math.PI*2;
@@ -119,7 +124,7 @@ initScene('canvas-lesson-10', function(group, THREE, api) {
   ];
   mitPositions.forEach(function(p) {
     var m = new THREE.Mesh(new THREE.SphereGeometry(0.155, 18, 18),
-      new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.38,
+      phys({ color: 0xf59e0b, roughness: 0.38,
         emissive: 0x3a2000, emissiveIntensity: 0.20 }));
     m.scale.set(1.30, 0.68, 0.75); m.position.set(p[0], p[1], p[2]);
     tagPart(m, 'الميتوكوندريا ⚡', 'مصنع الطاقة — تُحوّل الجلوكوز إلى ATP عبر التنفس الخلوي.');
@@ -128,7 +133,7 @@ initScene('canvas-lesson-10', function(group, THREE, api) {
   });
 
   /* ATP particle (animated during respiration mode) */
-  var atpMat = new THREE.MeshStandardMaterial({ color: 0xffd700, roughness: 0.30, emissive: 0x443300, emissiveIntensity: 0.40 });
+  var atpMat = phys({ color: 0xffd700, roughness: 0.30, emissive: 0x443300, emissiveIntensity: 0.40 });
   for (var ai = 0; ai < 8; ai++) {
     var atp = new THREE.Mesh(new THREE.SphereGeometry(0.040, 8, 8), atpMat.clone());
     atp.userData.orbit = { radius: 0.85, speed: 0.65 + ai*0.18, phase: ai*0.78, tilt: 0.55, z: 0.38 };
@@ -139,7 +144,7 @@ initScene('canvas-lesson-10', function(group, THREE, api) {
 
   /* Second daughter cell (appears in division mode) */
   SR.cellR = new THREE.Mesh(new THREE.SphereGeometry(1.15, 40, 40),
-    new THREE.MeshStandardMaterial({ color: 0x7c80f0, roughness: 0.55,
+    phys({ color: 0x7c80f0, roughness: 0.55,
       transparent: true, opacity: 0.12, emissive: 0x101040, emissiveIntensity: 0.08 }));
   SR.cellR.visible = false;
   tagPart(SR.cellR, 'الخلية البنت', 'خلية جديدة تنتج عن انقسام الخلية الأم بعملية الانقسام الخيطي (الميتوز).');

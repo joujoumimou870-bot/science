@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+
+<!-- Floating color blobs -->
+<div class="blob-bg" aria-hidden="true">
+  <span></span><span></span><span></span><span></span>
+</div>
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
@@ -70,8 +75,8 @@ initScene('canvas-lesson-6', function(group, THREE, api) {
   heart.scale.setScalar(1.05);
 
   /* Major arteries (red) */
-  var artMat = new THREE.MeshStandardMaterial({ color: 0xdd2222, roughness: 0.30, metalness: 0.05, emissive: 0x220000, emissiveIntensity: 0.12 });
-  var venMat = new THREE.MeshStandardMaterial({ color: 0x1a4a9e, roughness: 0.32, metalness: 0.05, emissive: 0x000a18, emissiveIntensity: 0.10 });
+  var artMat = matBlood(true);
+  var venMat = matBlood(false);
 
   var artCurves = [
     // Descending aorta goes down
@@ -123,7 +128,7 @@ initScene('canvas-lesson-6', function(group, THREE, api) {
   });
 
   /* Capillary network suggestion */
-  var capMat = new THREE.MeshStandardMaterial({ color: 0xff9999, roughness: 0.50, transparent: true, opacity: 0.65 });
+  var capMat = phys({ color: 0xff9999, roughness: 0.50, transparent: true, opacity: 0.65 });
   var capPositions = [[-0.95, 0.42], [1.05, 0.30], [0.28, -1.38], [-0.28, -1.38]];
   capPositions.forEach(function(cp) {
     for (var ci = 0; ci < 5; ci++) {
@@ -136,7 +141,7 @@ initScene('canvas-lesson-6', function(group, THREE, api) {
   });
 
   /* Red blood cells (animated) */
-  var rbcMat = new THREE.MeshStandardMaterial({ color: 0xff2222, roughness: 0.40, emissive: 0x220000, emissiveIntensity: 0.20 });
+  var rbcMat = phys({ color: 0xff2222, roughness: 0.40, emissive: 0x220000, emissiveIntensity: 0.20 });
   var rbcGroup = new THREE.Group();
   for (var ri = 0; ri < 6; ri++) {
     var rbc = new THREE.Mesh(new THREE.SphereGeometry(0.058, 12, 12), rbcMat.clone());

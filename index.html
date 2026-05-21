@@ -9,14 +9,71 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .home-wrapper { padding-top: 64px; }
-    .stats-row { display:flex; justify-content:center; gap:3rem; margin-top:3rem; position:relative; z-index:1; flex-wrap:wrap; }
-    .stat-item { text-align:center; }
-    .stat-num { font-size:2rem; font-weight:900; color:var(--teal); line-height:1; }
-    .stat-lbl { font-size:.8rem; color:var(--text-muted); margin-top:.2rem; }
+    .home-wrapper { padding-top: 66px; }
+
+    /* ── Stats ── */
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 3rem;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      text-align: center;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px;
+      padding: 1.2rem 2.2rem;
+      min-width: 120px;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+    }
+    .stat-item:hover {
+      transform: translateY(-6px) scale(1.04);
+    }
+    .stat-item:nth-child(1) { border-color: rgba(255,217,61,.25); }
+    .stat-item:nth-child(1):hover { box-shadow: 0 12px 30px rgba(255,217,61,.25); }
+    .stat-item:nth-child(2) { border-color: rgba(192,132,252,.25); }
+    .stat-item:nth-child(2):hover { box-shadow: 0 12px 30px rgba(192,132,252,.25); }
+    .stat-item:nth-child(3) { border-color: rgba(251,113,133,.25); }
+    .stat-item:nth-child(3):hover { box-shadow: 0 12px 30px rgba(251,113,133,.25); }
+
+    .stat-num {
+      font-size: 2.6rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .stat-item:nth-child(1) .stat-num { color: var(--grade4); filter: drop-shadow(0 0 12px rgba(255,217,61,.5)); }
+    .stat-item:nth-child(2) .stat-num { color: var(--grade5); filter: drop-shadow(0 0 12px rgba(192,132,252,.5)); }
+    .stat-item:nth-child(3) .stat-num { color: var(--grade6); filter: drop-shadow(0 0 12px rgba(251,113,133,.5)); }
+
+    .stat-lbl {
+      font-size: .82rem;
+      color: var(--text-muted);
+      margin-top: .4rem;
+      font-weight: 500;
+    }
+
+    /* ── Section wave separator ── */
+    .section-wave {
+      text-align: center;
+      font-size: 1.5rem;
+      letter-spacing: .5rem;
+      opacity: 0.4;
+      margin: -1rem auto 0;
+      position: relative;
+      z-index: 1;
+    }
   </style>
 </head>
 <body>
+
+<!-- Floating color blobs -->
+<div class="blob-bg" aria-hidden="true">
+  <span></span><span></span><span></span><span></span>
+</div>
 
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
@@ -33,10 +90,16 @@
   <section class="hero">
     <div class="hero-glow"></div>
     <div class="hero-badge">🎓 مصمَّم لتلاميذ المرحلة الابتدائية</div>
-    <div class="hero-emoji-row">🔬 🧬 🌱 🫀 🧠</div>
+    <div class="hero-emoji-row">
+      <span>🔬</span>
+      <span>🧬</span>
+      <span>🌱</span>
+      <span>🫀</span>
+      <span>🧠</span>
+    </div>
     <h1 class="hero-title">الأحياء بالواقع التفاعلي</h1>
     <p class="hero-subtitle">دروس علوم الأحياء بنماذج ثلاثية الأبعاد تفاعلية، مُصمَّمة لتلاميذ المرحلة الابتدائية في تونس</p>
-    <a href="#grade4" class="btn-primary">ابدأ التعلّم ↓</a>
+    <a href="#grade4" class="btn-primary">🚀 ابدأ التعلّم</a>
     <div class="stats-row">
       <div class="stat-item"><div class="stat-num">12</div><div class="stat-lbl">درساً تفاعلياً</div></div>
       <div class="stat-item"><div class="stat-num">3</div><div class="stat-lbl">مستويات دراسية</div></div>
@@ -214,21 +277,17 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-  var mat = function(col, em, ei, sh) {
-    return new THREE.MeshPhongMaterial({ color: col, emissive: em||0, emissiveIntensity: ei||0, shininess: sh||60 });
-  };
-
   /* === 1: Human body === */
   miniScene('cv1', function(g) {
-    var bm = mat(0xf5deb3);
-    var head = new THREE.Mesh(new THREE.SphereGeometry(0.55,20,20), bm.clone()); head.position.y=1.5; g.add(head);
+    var bm = matSkin(0xf5deb3);
+    var head = new THREE.Mesh(new THREE.SphereGeometry(0.55,32,32), bm.clone()); head.position.y=1.5; g.add(head);
     var torso = new THREE.Mesh(new THREE.BoxGeometry(0.9,1.2,0.5), bm.clone()); torso.position.y=0.3; g.add(torso);
     [-0.75,0.75].forEach(function(x){
-      var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.11,1.0,12), bm.clone());
+      var arm=new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.11,1.0,16), bm.clone());
       arm.position.set(x,0.25,0); arm.rotation.z=x>0?0.3:-0.3; g.add(arm);
     });
     [-0.28,0.28].forEach(function(x){
-      var leg=new THREE.Mesh(new THREE.CylinderGeometry(0.17,0.14,1.3,12), bm.clone()); leg.position.set(x,-1,0); g.add(leg);
+      var leg=new THREE.Mesh(new THREE.CylinderGeometry(0.17,0.14,1.3,16), bm.clone()); leg.position.set(x,-1,0); g.add(leg);
     });
   });
 
@@ -236,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
   miniScene('cv2', function(g) {
     var data=[{c:0x3b82f6,y:1.2,x:0},{c:0xf472b6,y:0.5,x:1.2},{c:0xfbbf24,y:-0.3,x:-0.5},{c:0xef4444,y:-1,x:0.4},{c:0xa78bfa,y:0.2,x:-1.3}];
     data.forEach(function(d,i){
-      var s=new THREE.Mesh(new THREE.SphereGeometry(0.38,20,20), mat(d.c,d.c,0.15));
+      var s=new THREE.Mesh(new THREE.SphereGeometry(0.38,24,24), matOrganelle(d.c,{ei:0.20}));
       s.position.set(d.x,d.y,0);
       s.userData.floatBase=d.y; s.userData.floatY=1.5+i*0.3; s.userData.floatAmp=0.08; g.add(s);
     });
@@ -244,44 +303,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* === 3: Heart + lungs + stomach === */
   miniScene('cv3', function(g) {
-    var heart=new THREE.Mesh(new THREE.TorusGeometry(0.55,0.26,12,40), mat(0xff2244,0xff0000,0.2,80));
+    var heart=new THREE.Mesh(new THREE.TorusGeometry(0.55,0.26,18,50), matOrgan(0xff2244,{clearcoat:0.75,ccRough:0.10,emissive:0x330000,ei:0.22}));
     heart.rotation.x=0.5; heart.userData.pulse={min:0.85,max:1.15,speed:4}; g.add(heart);
-    var lL=new THREE.Mesh(new THREE.SphereGeometry(0.38,16,16), mat(0xffb3c6)); lL.scale.set(1,1.4,0.7); lL.position.set(-0.9,0.2,0); g.add(lL);
-    var lR=new THREE.Mesh(new THREE.SphereGeometry(0.38,16,16), mat(0xffb3c6)); lR.scale.set(1,1.4,0.7); lR.position.set(0.9,0.2,0); g.add(lR);
+    var lungM=matOrgan(0xff9eb5,{clearcoat:0.55,ccRough:0.20});
+    var lL=new THREE.Mesh(new THREE.SphereGeometry(0.38,24,24), lungM); lL.scale.set(1,1.4,0.7); lL.position.set(-0.9,0.2,0); g.add(lL);
+    var lR=new THREE.Mesh(new THREE.SphereGeometry(0.38,24,24), lungM.clone()); lR.scale.set(1,1.4,0.7); lR.position.set(0.9,0.2,0); g.add(lR);
     lL.userData.pulse={min:0.9,max:1.08,speed:1.8}; lR.userData.pulse={min:0.9,max:1.08,speed:1.8};
-    var stom=new THREE.Mesh(new THREE.SphereGeometry(0.4,16,16), mat(0x86efac)); stom.scale.set(1.2,0.9,0.8); stom.position.y=-1.1; g.add(stom);
+    var stom=new THREE.Mesh(new THREE.SphereGeometry(0.4,20,20), matOrgan(0x6fd49a,{clearcoat:0.55})); stom.scale.set(1.2,0.9,0.8); stom.position.y=-1.1; g.add(stom);
   });
 
   /* === 4: Plant === */
   miniScene('cv4', function(g) {
-    var soil=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,0.3,24), mat(0x8B4513)); soil.position.y=-1.4; g.add(soil);
-    var stem=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.1,1.8,12), mat(0x22c55e)); stem.position.y=-0.4; g.add(stem);
+    var soil=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,0.3,28), phys({color:0x8B4513,roughness:0.88})); soil.position.y=-1.4; g.add(soil);
+    var stem=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.1,1.8,16), matOrgan(0x22c55e,{clearcoat:0.45})); stem.position.y=-0.4; g.add(stem);
     for(var i=0;i<3;i++){
-      var leaf=new THREE.Mesh(new THREE.SphereGeometry(0.3,12,12), mat(0x4ade80)); leaf.scale.set(1,0.4,0.6);
+      var leaf=new THREE.Mesh(new THREE.SphereGeometry(0.3,16,16), matOrgan(0x4ade80,{clearcoat:0.50,ei:0.05})); leaf.scale.set(1,0.4,0.6);
       var a=(i/3)*Math.PI*2; leaf.position.set(Math.cos(a)*0.55,-0.1+i*0.35,Math.sin(a)*0.3); g.add(leaf);
     }
-    var fc=new THREE.Mesh(new THREE.SphereGeometry(0.28,12,12), mat(0xfbbf24)); fc.position.y=0.75; g.add(fc);
+    var fc=new THREE.Mesh(new THREE.SphereGeometry(0.28,16,16), matOrganelle(0xfbbf24,{ei:0.20})); fc.position.y=0.75; g.add(fc);
     for(var j=0;j<6;j++){
-      var p=new THREE.Mesh(new THREE.SphereGeometry(0.16,10,10), mat(0xf9a8d4)); var aj=(j/6)*Math.PI*2;
+      var p=new THREE.Mesh(new THREE.SphereGeometry(0.16,14,14), matOrgan(0xf9a8d4,{clearcoat:0.60})); var aj=(j/6)*Math.PI*2;
       p.position.set(Math.cos(aj)*0.42,0.75,Math.sin(aj)*0.42); g.add(p);
     }
   });
 
   /* === 5: Lungs === */
   miniScene('cv5', function(g) {
-    var lL=new THREE.Mesh(new THREE.SphereGeometry(0.65,20,20), mat(0xff9eb5)); lL.scale.set(1,1.5,0.8); lL.position.x=-0.85; g.add(lL);
-    var lR=new THREE.Mesh(new THREE.SphereGeometry(0.65,20,20), mat(0xff9eb5)); lR.scale.set(1,1.5,0.8); lR.position.x=0.85; g.add(lR);
+    var lm=matOrgan(0xff9eb5,{clearcoat:0.55,ccRough:0.20});
+    var lL=new THREE.Mesh(new THREE.SphereGeometry(0.65,28,28), lm); lL.scale.set(1,1.5,0.8); lL.position.x=-0.85; g.add(lL);
+    var lR=new THREE.Mesh(new THREE.SphereGeometry(0.65,28,28), lm.clone()); lR.scale.set(1,1.5,0.8); lR.position.x=0.85; g.add(lR);
     lL.userData.pulse={min:0.85,max:1.1,speed:1.8}; lR.userData.pulse={min:0.85,max:1.1,speed:1.8};
-    var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,1,12), mat(0xfde68a)); tr.position.y=1.0; g.add(tr);
+    var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,1,16), matOrgan(0xfde68a,{clearcoat:0.45})); tr.position.y=1.0; g.add(tr);
   });
 
   /* === 6: Circulatory === */
   miniScene('cv6', function(g) {
-    var h=new THREE.Mesh(new THREE.TorusGeometry(0.6,0.28,12,40), mat(0xff2244,0xff0000,0.2,80));
+    var h=new THREE.Mesh(new THREE.TorusGeometry(0.6,0.28,18,50), matBlood(true));
     h.rotation.x=0.4; h.userData.pulse={min:0.88,max:1.18,speed:4}; g.add(h);
     for(var i=0;i<5;i++){
       var a=(i/5)*Math.PI*2;
-      var v=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.04,1.2,8), mat(0xef4444));
+      var v=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.04,1.2,10), matBlood(true));
       v.rotation.z=a+Math.PI/2; v.position.set(Math.cos(a)*1.2,Math.sin(a)*1.2,0); g.add(v);
     }
   });
@@ -289,18 +350,18 @@ document.addEventListener('DOMContentLoaded', function() {
   /* === 7: Digestive === */
   miniScene('cv7', function(g) {
     [[0xfbbf24,1.7,0.3],[0xfde68a,0.9,0.15],[0xfde68a,0.1,0.15],[0x6ee7b7,-0.7,0.5],[0x86efac,-1.5,0.2]].forEach(function(d){
-      var s=new THREE.Mesh(new THREE.SphereGeometry(d[2],14,14), mat(d[0])); s.position.y=d[1]; g.add(s);
+      var s=new THREE.Mesh(new THREE.SphereGeometry(d[2],16,16), matOrgan(d[0],{clearcoat:0.55})); s.position.y=d[1]; g.add(s);
     });
-    [1.3,0.5].forEach(function(y){ var t=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,0.7,10), mat(0xfde68a)); t.position.y=y; g.add(t); });
+    [1.3,0.5].forEach(function(y){ var t=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,0.7,12), matOrgan(0xfde68a,{clearcoat:0.45})); t.position.y=y; g.add(t); });
   });
 
   /* === 8: Three kingdoms === */
   miniScene('cv8', function(g) {
     [[0x4ade80,-1.3],[0xfb923c,0],[0xa78bfa,1.3]].forEach(function(d,i){
-      var big=new THREE.Mesh(new THREE.SphereGeometry(0.45,20,20), mat(d[0],d[0],0.15)); big.position.set(d[1],0,0); g.add(big);
+      var big=new THREE.Mesh(new THREE.SphereGeometry(0.45,24,24), matOrganelle(d[0],{ei:0.18})); big.position.set(d[1],0,0); g.add(big);
       big.userData.floatBase=0; big.userData.floatY=1.2+i*0.5; big.userData.floatAmp=0.12;
       for(var j=0;j<3;j++){
-        var s=new THREE.Mesh(new THREE.SphereGeometry(0.15,10,10), mat(d[0])); var a=(j/3)*Math.PI*2;
+        var s=new THREE.Mesh(new THREE.SphereGeometry(0.15,14,14), matOrganelle(d[0],{ei:0.12})); var a=(j/3)*Math.PI*2;
         s.position.set(d[1]+Math.cos(a)*0.68,Math.sin(a)*0.55,0); g.add(s);
       }
     });
@@ -308,42 +369,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* === 9: Cell === */
   miniScene('cv9', function(g) {
-    var outer=new THREE.Mesh(new THREE.SphereGeometry(1.4,28,28), new THREE.MeshPhongMaterial({color:0x00c9a7,transparent:true,opacity:0.15})); g.add(outer);
-    var wire=new THREE.Mesh(new THREE.SphereGeometry(1.42,20,20), new THREE.MeshBasicMaterial({color:0x00c9a7,wireframe:true,transparent:true,opacity:0.25})); g.add(wire);
-    var nuc=new THREE.Mesh(new THREE.SphereGeometry(0.5,20,20), mat(0x6366f1,0x6366f1,0.25)); g.add(nuc);
+    var outer=new THREE.Mesh(new THREE.SphereGeometry(1.4,36,36), matGlass(0x00f5c4, 0.14, {roughness:0.06,transmission:0.88,thickness:0.6})); g.add(outer);
+    var wire=new THREE.Mesh(new THREE.SphereGeometry(1.42,24,24), new THREE.MeshBasicMaterial({color:0x00f5c4,wireframe:true,transparent:true,opacity:0.18})); g.add(wire);
+    var nuc=new THREE.Mesh(new THREE.SphereGeometry(0.5,24,24), matOrganelle(0x6366f1,{ei:0.30})); g.add(nuc);
     var cols=[0xf59e0b,0xec4899,0x34d399,0xfbbf24];
-    for(var i=0;i<6;i++){var a=(i/6)*Math.PI*2; var or=new THREE.Mesh(new THREE.SphereGeometry(0.16,10,10), mat(cols[i%4])); or.position.set(Math.cos(a)*0.85,Math.sin(a)*0.65,Math.cos(a+1)*0.4); g.add(or);}
+    for(var i=0;i<6;i++){var a=(i/6)*Math.PI*2; var or=new THREE.Mesh(new THREE.SphereGeometry(0.16,14,14), matOrganelle(cols[i%4],{ei:0.22})); or.position.set(Math.cos(a)*0.85,Math.sin(a)*0.65,Math.cos(a+1)*0.4); g.add(or);}
   });
 
   /* === 10: Cell division === */
   miniScene('cv10', function(g) {
-    var c1=new THREE.Mesh(new THREE.SphereGeometry(0.6,20,20), mat(0x6366f1,0x6366f1,0.2)); c1.position.x=-0.7; g.add(c1);
-    var c2=new THREE.Mesh(new THREE.SphereGeometry(0.6,20,20), mat(0x6366f1,0x6366f1,0.2)); c2.position.x=0.7; g.add(c2);
+    var c1=new THREE.Mesh(new THREE.SphereGeometry(0.6,24,24), matOrganelle(0x6366f1,{ei:0.22})); c1.position.x=-0.7; g.add(c1);
+    var c2=new THREE.Mesh(new THREE.SphereGeometry(0.6,24,24), matOrganelle(0x6366f1,{ei:0.22})); c2.position.x=0.7; g.add(c2);
     c1.userData.pulse={min:0.85,max:1.1,speed:2}; c2.userData.pulse={min:0.85,max:1.1,speed:2};
-    var n1=new THREE.Mesh(new THREE.SphereGeometry(0.22,14,14), mat(0xec4899)); n1.position.x=-0.7; g.add(n1);
-    var n2=new THREE.Mesh(new THREE.SphereGeometry(0.22,14,14), mat(0xec4899)); n2.position.x=0.7; g.add(n2);
+    var n1=new THREE.Mesh(new THREE.SphereGeometry(0.22,14,14), matOrganelle(0xec4899,{ei:0.35})); n1.position.x=-0.7; g.add(n1);
+    var n2=new THREE.Mesh(new THREE.SphereGeometry(0.22,14,14), matOrganelle(0xec4899,{ei:0.35})); n2.position.x=0.7; g.add(n2);
   });
 
   /* === 11: Water cycle === */
   miniScene('cv11', function(g) {
-    var sun=new THREE.Mesh(new THREE.SphereGeometry(0.55,20,20), mat(0xfbbf24,0xfde68a,0.4)); sun.position.set(1.3,1.3,0); sun.userData.pulse={min:0.9,max:1.1,speed:2}; g.add(sun);
-    var cloud=new THREE.Mesh(new THREE.SphereGeometry(0.5,16,16), mat(0xd1d5db)); cloud.position.set(-1,1,0); g.add(cloud);
-    var c2=new THREE.Mesh(new THREE.SphereGeometry(0.38,14,14), mat(0xd1d5db)); c2.position.set(-1.5,1.1,0); g.add(c2);
-    var c3=new THREE.Mesh(new THREE.SphereGeometry(0.35,14,14), mat(0xd1d5db)); c3.position.set(-0.5,1.15,0); g.add(c3);
+    var sun=new THREE.Mesh(new THREE.SphereGeometry(0.55,24,24), matOrganelle(0xfbbf24,{ei:0.45})); sun.position.set(1.3,1.3,0); sun.userData.pulse={min:0.9,max:1.1,speed:2}; g.add(sun);
+    var cloudM=phys({color:0xd1d5db,roughness:0.70});
+    var cloud=new THREE.Mesh(new THREE.SphereGeometry(0.5,18,18), cloudM); cloud.position.set(-1,1,0); g.add(cloud);
+    var c2=new THREE.Mesh(new THREE.SphereGeometry(0.38,16,16), cloudM.clone()); c2.position.set(-1.5,1.1,0); g.add(c2);
+    var c3=new THREE.Mesh(new THREE.SphereGeometry(0.35,16,16), cloudM.clone()); c3.position.set(-0.5,1.15,0); g.add(c3);
     for(var i=0;i<5;i++){
-      var d=new THREE.Mesh(new THREE.SphereGeometry(0.08,8,8), mat(0x60a5fa)); d.position.set(-1.2+i*0.2,0.3-(i%3)*0.3,0);
+      var d=new THREE.Mesh(new THREE.SphereGeometry(0.08,10,10), matOrganelle(0x60a5fa,{ei:0.15})); d.position.set(-1.2+i*0.2,0.3-(i%3)*0.3,0);
       d.userData.floatBase=d.position.y; d.userData.floatY=2+i*0.5; d.userData.floatAmp=0.15; g.add(d);
     }
-    var ground=new THREE.Mesh(new THREE.PlaneGeometry(3.5,0.3), mat(0x4ade80)); ground.rotation.x=-Math.PI/2; ground.position.y=-1.4; g.add(ground);
+    var ground=new THREE.Mesh(new THREE.PlaneGeometry(3.5,0.3), matOrgan(0x4ade80,{roughness:0.78,clearcoat:0.12})); ground.rotation.x=-Math.PI/2; ground.position.y=-1.4; g.add(ground);
   });
 
   /* === 12: Food chain === */
   miniScene('cv12', function(g) {
     [[0x4ade80,-1.3],[0xfb923c,0],[0xa78bfa,1.3]].forEach(function(d){
-      var s=new THREE.Mesh(new THREE.SphereGeometry(0.45,20,20), mat(d[0],d[0],0.15)); s.position.x=d[1]; s.userData.floatBase=0; s.userData.floatY=1.5; s.userData.floatAmp=0.1; g.add(s);
+      var s=new THREE.Mesh(new THREE.SphereGeometry(0.45,24,24), matOrganelle(d[0],{ei:0.18})); s.position.x=d[1]; s.userData.floatBase=0; s.userData.floatY=1.5; s.userData.floatAmp=0.1; g.add(s);
     });
     [-0.65,0.65].forEach(function(x){
-      var arr=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.7,10), mat(0x94a3b8)); arr.rotation.z=Math.PI/2; arr.position.x=x; g.add(arr);
+      var arr=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.7,12), phys({color:0x94a3b8,roughness:0.55})); arr.rotation.z=Math.PI/2; arr.position.x=x; g.add(arr);
     });
   });
 
