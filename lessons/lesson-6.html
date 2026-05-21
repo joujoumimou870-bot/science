@@ -8,12 +8,10 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
 </nav>
-
 <div class="lesson-layout">
   <div class="scene-panel">
     <canvas id="canvas-lesson-6"></canvas>
@@ -24,40 +22,32 @@
       <div class="part-info-name" id="part-name"></div>
       <div class="part-info-desc" id="part-desc"></div>
     </div>
-    <div class="scene-hint">انقر على القلب أو الأوعية</div>
+    <div class="scene-hint">انقر على القلب أو الأوعية الدموية</div>
   </div>
-
   <div class="info-panel">
     <div class="lesson-header">
-      <div class="lesson-meta">
-        <span class="grade-badge badge-5">الصف الخامس</span>
-        <span class="lesson-num-badge">الدرس 6</span>
-      </div>
+      <div class="lesson-meta"><span class="grade-badge badge-5">الصف الخامس</span><span class="lesson-num-badge">الدرس 6</span></div>
       <h1 class="lesson-title">جهاز الدوران (القلب والشرايين)</h1>
       <p style="color:var(--text-muted);font-size:.9rem">القلب · الشرايين · الأوردة</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">📖 شرح الدرس</div>
       <p><strong>جهاز الدوران</strong> ينقل الدم: القلب يضخّه عبر <strong>الشرايين</strong> إلى الأعضاء، ثم يعود عبر <strong>الأوردة</strong>.</p>
       <p>الدم يحمل الأكسجين والغذاء وينقل الفضلات.</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">✦ معلومات مهمة</div>
       <ul class="fact-list">
-        <li>الشرايين: من القلب إلى الجسم.</li>
-        <li>الأوردة: من الجسم إلى القلب.</li>
-        <li>الشعيرات: مكان تبادل الغازات.</li>
+        <li>الشرايين: من القلب إلى الجسم (دم مؤكسج).</li>
+        <li>الأوردة: من الجسم إلى القلب (دم غير مؤكسج).</li>
+        <li>الشعيرات: مكان تبادل الغازات والغذاء.</li>
         <li>طول الأوعية نحو 100,000 كم.</li>
       </ul>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">🌟 هل تعلم؟</div>
       <p>يمرّ الدم بكامل الجسم في أقل من دقيقة عند الراحة!</p>
     </div>
-
     <div class="quiz-card">
       <div class="quiz-label">🎯 اختبر نفسك</div>
       <div class="quiz-question">ما الأوعية التي تنقل الدم من القلب إلى الأعضاء؟</div>
@@ -71,27 +61,95 @@
     </div>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="../js/scene-utils.js"></script>
 <script>
 initScene('canvas-lesson-6', function(group, THREE, api) {
   var heart = buildHeart(group);
+  heart.position.set(0, 0.10, 0);
+  heart.scale.setScalar(1.05);
+
+  /* Major arteries (red) */
+  var artMat = new THREE.MeshStandardMaterial({ color: 0xdd2222, roughness: 0.30, metalness: 0.05, emissive: 0x220000, emissiveIntensity: 0.12 });
+  var venMat = new THREE.MeshStandardMaterial({ color: 0x1a4a9e, roughness: 0.32, metalness: 0.05, emissive: 0x000a18, emissiveIntensity: 0.10 });
+
+  var artCurves = [
+    // Descending aorta goes down
+    [new THREE.Vector3(0.45, 0.98, -0.12), new THREE.Vector3(0.40, 0.50, -0.10), new THREE.Vector3(0.35, 0.0, -0.05), new THREE.Vector3(0.28, -0.6, 0), new THREE.Vector3(0.18, -1.2, 0.05)],
+    // Left subclavian
+    [new THREE.Vector3(0.10, 1.18, 0), new THREE.Vector3(-0.20, 1.28, 0.05), new THREE.Vector3(-0.55, 1.15, 0.10), new THREE.Vector3(-0.85, 0.85, 0.12), new THREE.Vector3(-1.10, 0.5, 0.10)],
+    // Right subclavian
+    [new THREE.Vector3(0.35, 1.18, -0.05), new THREE.Vector3(0.65, 1.22, 0), new THREE.Vector3(0.90, 1.05, 0.08), new THREE.Vector3(1.10, 0.70, 0.10), new THREE.Vector3(1.15, 0.38, 0.10)],
+    // Left iliac
+    [new THREE.Vector3(0.18, -1.2, 0.05), new THREE.Vector3(0.0, -1.45, 0.05), new THREE.Vector3(-0.22, -1.65, 0.04)],
+    // Right iliac
+    [new THREE.Vector3(0.18, -1.2, 0.05), new THREE.Vector3(0.35, -1.48, 0.05), new THREE.Vector3(0.50, -1.68, 0.04)],
+  ];
+
+  var venCurves = [
+    // Superior vena cava
+    [new THREE.Vector3(0.34, 0.88, 0), new THREE.Vector3(0.45, 1.15, 0.05), new THREE.Vector3(0.55, 1.45, 0.10)],
+    // Inferior vena cava
+    [new THREE.Vector3(0.28, 0.52, 0), new THREE.Vector3(0.30, -0.3, -0.05), new THREE.Vector3(0.25, -0.8, -0.04), new THREE.Vector3(0.20, -1.3, 0)],
+    // Left arm vein
+    [new THREE.Vector3(-1.10, 0.5, 0.10), new THREE.Vector3(-0.80, 0.70, 0.12), new THREE.Vector3(-0.45, 0.90, 0.10), new THREE.Vector3(-0.20, 1.05, 0.08)],
+    // Right arm vein
+    [new THREE.Vector3(1.15, 0.38, 0.10), new THREE.Vector3(0.88, 0.62, 0.12), new THREE.Vector3(0.58, 0.85, 0.10), new THREE.Vector3(0.35, 0.98, 0.06)],
+  ];
+
   var vesselUd = {
-    nameAr: 'الشرايين والأوردة',
-    descAr: 'شبكة أنابيب: الشرايين تحمل الدم من القلب، والأوردة تعيده. الشعيرات تربطهما عند الأعضاء.'
+    nameAr: 'الشرايين 🔴',
+    descAr: 'أوعية سميكة الجدران تنقل الدم المؤكسج (الأحمر الفاتح) من القلب إلى أنسجة الجسم بضغط مرتفع.'
   };
-  for (var i = 0; i < 5; i++) {
-    var a = (i / 5) * Math.PI * 2;
-    var col = i % 2 === 0 ? 0xef4444 : 0x3b82f6;
-    var v = mkCyl(0.05, 0.03, 1.2, col);
-    v.rotation.z = a + Math.PI / 2;
-    v.position.set(Math.cos(a) * 1.2, Math.sin(a) * 1.2, 0);
-    tagPart(v, vesselUd.nameAr, vesselUd.descAr);
-    group.add(v);
+  var venUd = {
+    nameAr: 'الأوردة 🔵',
+    descAr: 'أوعية تنقل الدم المستهلك (الأزرق المحمر) من الأنسجة عائداً إلى القلب. لها صمامات تمنع الارتداد.'
+  };
+
+  artCurves.forEach(function(pts) {
+    var c = new THREE.CatmullRomCurve3(pts.map(function(p) { return p; }));
+    var m = new THREE.Mesh(new THREE.TubeGeometry(c, 18, 0.065, 10, false), artMat.clone());
+    tagPart(m, vesselUd.nameAr, vesselUd.descAr);
+    m.castShadow = true;
+    group.add(m);
+  });
+
+  venCurves.forEach(function(pts) {
+    var c = new THREE.CatmullRomCurve3(pts.map(function(p) { return p; }));
+    var m = new THREE.Mesh(new THREE.TubeGeometry(c, 16, 0.055, 10, false), venMat.clone());
+    tagPart(m, venUd.nameAr, venUd.descAr);
+    m.castShadow = true;
+    group.add(m);
+  });
+
+  /* Capillary network suggestion */
+  var capMat = new THREE.MeshStandardMaterial({ color: 0xff9999, roughness: 0.50, transparent: true, opacity: 0.65 });
+  var capPositions = [[-0.95, 0.42], [1.05, 0.30], [0.28, -1.38], [-0.28, -1.38]];
+  capPositions.forEach(function(cp) {
+    for (var ci = 0; ci < 5; ci++) {
+      var cap = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.22, 6), capMat.clone());
+      cap.position.set(cp[0] + (Math.random()-0.5)*0.22, cp[1] + (Math.random()-0.5)*0.22, (Math.random()-0.5)*0.1);
+      cap.rotation.set(Math.random()*0.8, Math.random()*Math.PI*2, Math.random()*0.8);
+      tagPart(cap, 'الشعيرات الدموية', 'أوعية دقيقة جداً تربط الشرايين والأوردة؛ مكان تبادل الأكسجين والغذاء مع الخلايا.');
+      group.add(cap);
+    }
+  });
+
+  /* Red blood cells (animated) */
+  var rbcMat = new THREE.MeshStandardMaterial({ color: 0xff2222, roughness: 0.40, emissive: 0x220000, emissiveIntensity: 0.20 });
+  var rbcGroup = new THREE.Group();
+  for (var ri = 0; ri < 6; ri++) {
+    var rbc = new THREE.Mesh(new THREE.SphereGeometry(0.058, 12, 12), rbcMat.clone());
+    rbc.scale.set(1, 0.40, 1);
+    rbc.userData.orbit = { radius: 0.42 + ri * 0.08, speed: 0.55 + ri * 0.12, phase: ri * 1.05, tilt: 0.4, z: 0.18 };
+    rbcGroup.add(rbc);
   }
-  api.labels.add(heart, 'القلب ❤️', new THREE.Vector3(0, 0.8, 0));
-}, { cameraZ: 5 });
+  group.add(rbcGroup);
+
+  api.labels.add(heart, 'القلب ❤️', new THREE.Vector3(0, 0.82, 0));
+
+  group.traverse(function(o) { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+}, { cameraZ: 5.5 });
 
 bindQuiz();
 </script>

@@ -8,12 +8,10 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
 </nav>
-
 <div class="lesson-layout">
   <div class="scene-panel">
     <canvas id="canvas-lesson-7"></canvas>
@@ -26,36 +24,29 @@
     </div>
     <div class="scene-hint">انقر على مرحلة هضم الطعام</div>
   </div>
-
   <div class="info-panel">
     <div class="lesson-header">
-      <div class="lesson-meta">
-        <span class="grade-badge badge-5">الصف الخامس</span>
-        <span class="lesson-num-badge">الدرس 7</span>
-      </div>
+      <div class="lesson-meta"><span class="grade-badge badge-5">الصف الخامس</span><span class="lesson-num-badge">الدرس 7</span></div>
       <h1 class="lesson-title">الجهاز الهضمي</h1>
       <p style="color:var(--text-muted);font-size:.9rem">الفم · المريء · المعدة · الأمعاء</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">📖 شرح الدرس</div>
       <p>رحلة الطعام: <strong>الفم</strong> (مضغ) → <strong>المريء</strong> → <strong>المعدة</strong> (هضم) → <strong>الأمعاء</strong> (امتصاص).</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">✦ معلومات مهمة</div>
       <ul class="fact-list">
         <li>اللعاب يبدأ هضم النشويات.</li>
-        <li>المعدة حمضية قوية.</li>
-        <li>الأمعاء الدقيقة طويلة مطوية.</li>
+        <li>المعدة حمضية قوية (pH 1.5–3.5).</li>
+        <li>الأمعاء الدقيقة 6–7 أمتار مطوية.</li>
+        <li>الكبد يُنتج الصفراء لهضم الدهون.</li>
       </ul>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">🌟 هل تعلم؟</div>
-      <p>المعدة تستغرق 2–4 ساعات لهضم الوجبة!</p>
+      <p>المعدة تستغرق 2–4 ساعات لهضم الوجبة والطعام يقطع 9 أمتار حتى الخروج!</p>
     </div>
-
     <div class="quiz-card">
       <div class="quiz-label">🎯 اختبر نفسك</div>
       <div class="quiz-question">أين يبدأ مضغ الطعام؟</div>
@@ -69,36 +60,114 @@
     </div>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="../js/scene-utils.js"></script>
 <script>
 initScene('canvas-lesson-7', function(group, THREE, api) {
-  var mouth = mkSphere(0.34, 0xfbbf24);
-  mouth.position.y = 1.65;
-  tagPart(mouth, 'الفم 👄', 'يبدأ هضم الطعام بالمضغ والخلط باللعاب.');
-  group.add(mouth);
 
-  var e1 = mkCyl(0.1, 0.1, 0.65, 0xfde68a);
-  e1.position.y = 1.1;
-  var e2 = mkCyl(0.1, 0.1, 0.65, 0xfde68a);
-  e2.position.y = 0.45;
-  tagPart(e1, 'المريء', 'أنبوب عضلي ينقل اللقمة من الفم إلى المعدة.');
-  tagPart(e2, 'المريء', 'أنبوب عضلي ينقل اللقمة من الفم إلى المعدة.');
-  group.add(e1, e2);
+  /* Mouth */
+  var mouthG = new THREE.Group();
+  mouthG.position.y = 2.05;
+  var jawUp = new THREE.Mesh(new THREE.SphereGeometry(0.30, 24, 24),
+    new THREE.MeshStandardMaterial({ color: 0xf5d0a0, roughness: 0.55 }));
+  jawUp.scale.set(1.2, 0.65, 0.90); jawUp.position.y = 0.08;
+  var jawLo = new THREE.Mesh(new THREE.SphereGeometry(0.28, 24, 24),
+    new THREE.MeshStandardMaterial({ color: 0xf0c090, roughness: 0.55 }));
+  jawLo.scale.set(1.1, 0.55, 0.85); jawLo.position.y = -0.10;
+  // Teeth (4 small white blocks)
+  for (var ti = 0; ti < 4; ti++) {
+    var tooth = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.12, 0.08),
+      new THREE.MeshStandardMaterial({ color: 0xf5f5f0, roughness: 0.20 }));
+    tooth.position.set(-0.18 + ti*0.12, -0.02, 0.24);
+    mouthG.add(tooth);
+  }
+  mouthG.add(jawUp, jawLo);
+  tagPartGroup([jawUp, jawLo], 'الفم 👄', 'يبدأ هضم الطعام بالمضغ ميكانيكياً، والخلط باللعاب الذي يحتوي إنزيمات لهضم النشويات.');
+  group.add(mouthG);
 
-  var stom = buildStomach(group, { y: -0.55 });
-  stom.userData.pulse = { min: 0.96, max: 1.04, speed: 1.5 };
+  /* Oesophagus as tube */
+  var esoCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0.04, 1.70, -0.05),
+    new THREE.Vector3(0.03, 1.25, -0.04),
+    new THREE.Vector3(0.02, 0.80, -0.03),
+    new THREE.Vector3(0.01, 0.40, -0.02),
+    new THREE.Vector3(0.0, 0.05, 0),
+  ]);
+  var esoMesh = new THREE.Mesh(new THREE.TubeGeometry(esoCurve, 22, 0.085, 12, false),
+    new THREE.MeshStandardMaterial({ color: 0xfde68a, roughness: 0.48 }));
+  tagPart(esoMesh, 'المريء 🫁', 'أنبوب عضلي طوله 25 سم. يدفع اللقمة بحركات تمعّجية نحو المعدة.');
+  group.add(esoMesh);
 
-  var int1 = mkSphere(0.24, 0x86efac);
-  int1.scale.set(1.2, 0.7, 0.8);
-  int1.position.y = -1.2;
-  tagPart(int1, 'الأمعاء', 'تمتصّ الغذاء المهضوم وتنقله إلى الدم.');
-  group.add(int1);
+  /* Stomach — more detailed */
+  var stomG = new THREE.Group();
+  stomG.position.set(0.30, -0.55, 0.04);
+  var stomBody = new THREE.Mesh(new THREE.SphereGeometry(0.60, 32, 32),
+    new THREE.MeshStandardMaterial({ color: 0x6fa35a, roughness: 0.50, emissive: 0x0a1404, emissiveIntensity: 0.10 }));
+  stomBody.scale.set(1.28, 0.92, 0.80); stomBody.rotation.z = -0.22;
+  var cardiaEnd = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16),
+    new THREE.MeshStandardMaterial({ color: 0x5a9048, roughness: 0.52 }));
+  cardiaEnd.position.set(-0.62, 0.30, 0);
+  var pylorusEnd = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16),
+    new THREE.MeshStandardMaterial({ color: 0x5a9048, roughness: 0.52 }));
+  pylorusEnd.position.set(0.60, -0.22, 0);
+  stomG.add(stomBody, cardiaEnd, pylorusEnd);
+  tagPartGroup([stomBody, cardiaEnd, pylorusEnd], 'المعدة 🫃', 'كيس عضلي مرن يسع نحو 1.5 لتر. يخلط الطعام بالعصارة الحمضية (pH 1.5) ويهضمه خلال 2–4 ساعات.');
+  stomG.userData.pulse = { min: 0.97, max: 1.03, speed: 1.2 };
+  group.add(stomG);
 
-  api.labels.add(mouth, 'الفم 👄');
-  api.labels.add(stom, 'المعدة 🫃');
-}, { cameraZ: 5.5 });
+  /* Duodenum */
+  var duodCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0.85, -0.75, 0.04), new THREE.Vector3(0.95, -0.90, 0.05),
+    new THREE.Vector3(0.90, -1.10, 0.04), new THREE.Vector3(0.65, -1.22, 0.03),
+    new THREE.Vector3(0.40, -1.18, 0.02),
+  ]);
+  var duodMesh = new THREE.Mesh(new THREE.TubeGeometry(duodCurve, 16, 0.095, 12, false),
+    new THREE.MeshStandardMaterial({ color: 0xffa580, roughness: 0.52 }));
+  tagPart(duodMesh, 'الاثنا عشري 🔱', 'أول قسم من الأمعاء الدقيقة. يستقبل الصفراء من الكبد وعصارة البنكرياس لإكمال الهضم.');
+  group.add(duodMesh);
+
+  /* Small intestine — coiled tube */
+  var siPts = [];
+  for (var si = 0; si < 48; si++) {
+    var sA = si * 0.38;
+    var sR = 0.55 - si * 0.005;
+    siPts.push(new THREE.Vector3(Math.cos(sA) * sR, -1.35 - si * 0.025, Math.sin(sA) * sR * 0.5));
+  }
+  var siCurve = new THREE.CatmullRomCurve3(siPts);
+  var siMesh = new THREE.Mesh(new THREE.TubeGeometry(siCurve, 80, 0.085, 10, false),
+    new THREE.MeshStandardMaterial({ color: 0xffaa70, roughness: 0.54, emissive: 0x100400, emissiveIntensity: 0.06 }));
+  tagPart(siMesh, 'الأمعاء الدقيقة 🌀', 'طولها 6–7 أمتار مطوية في البطن. زغاباتها تزيد سطح الامتصاص لمليون ضعف. تمتصّ الغذاء إلى الدم.');
+  group.add(siMesh);
+
+  /* Large intestine */
+  var liPts = [
+    new THREE.Vector3(-0.60, -2.20, 0.10), new THREE.Vector3(-0.85, -1.85, 0.08),
+    new THREE.Vector3(-0.85, -1.30, 0.06), new THREE.Vector3(-0.70, -0.95, 0.05),
+    new THREE.Vector3(-0.40, -0.82, 0.04), new THREE.Vector3(0.10, -0.80, 0.04),
+    new THREE.Vector3(0.60, -0.85, 0.05), new THREE.Vector3(0.85, -1.02, 0.06),
+    new THREE.Vector3(0.85, -1.55, 0.08), new THREE.Vector3(0.72, -2.05, 0.10),
+    new THREE.Vector3(0.50, -2.28, 0.12), new THREE.Vector3(-0.0, -2.35, 0.14),
+  ];
+  var liCurve = new THREE.CatmullRomCurve3(liPts.map(function(p){return p;}));
+  var liMesh = new THREE.Mesh(new THREE.TubeGeometry(liCurve, 40, 0.135, 12, false),
+    new THREE.MeshStandardMaterial({ color: 0xc8906a, roughness: 0.58, emissive: 0x0c0400, emissiveIntensity: 0.06 }));
+  tagPart(liMesh, 'الأمعاء الغليظة 🔶', 'تمتصّ الماء وتُشكّل الفضلات. طولها ~1.5 متر. تحتوي مليارات البكتيريا المفيدة.');
+  group.add(liMesh);
+
+  /* Liver */
+  var liver = new THREE.Mesh(new THREE.SphereGeometry(0.52, 28, 28),
+    new THREE.MeshStandardMaterial({ color: 0x7b3822, roughness: 0.48, emissive: 0x100400, emissiveIntensity: 0.10 }));
+  liver.scale.set(1.32, 0.72, 0.82); liver.position.set(-0.50, -0.42, 0.08);
+  tagPart(liver, 'الكبد 🔴', 'أكبر غدة في الجسم. يُنتج الصفراء لهضم الدهون ويُفكّك السموم ويُخزّن الغليكوجين.');
+  group.add(liver);
+
+  api.labels.add(mouthG,   'الفم 👄',           new THREE.Vector3(0, 0.40, 0));
+  api.labels.add(stomG,    'المعدة 🫃',          new THREE.Vector3(0, 0.45, 0));
+  api.labels.add(siMesh,   'الأمعاء الدقيقة 🌀', new THREE.Vector3(0, 0.5, 0));
+  api.labels.add(liver,    'الكبد 🔴',           new THREE.Vector3(0, 0.40, 0));
+
+  group.traverse(function(o) { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+}, { cameraZ: 7.0 });
 
 bindQuiz();
 </script>

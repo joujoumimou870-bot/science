@@ -8,12 +8,10 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
 </nav>
-
 <div class="lesson-layout">
   <div class="scene-panel">
     <canvas id="canvas-lesson-9"></canvas>
@@ -30,23 +28,17 @@
     </div>
     <div class="scene-hint">اختر نوع الخلية • انقر على عضيّة</div>
   </div>
-
   <div class="info-panel">
     <div class="lesson-header">
-      <div class="lesson-meta">
-        <span class="grade-badge badge-6">الصف السادس</span>
-        <span class="lesson-num-badge">الدرس 9</span>
-      </div>
+      <div class="lesson-meta"><span class="grade-badge badge-6">الصف السادس</span><span class="lesson-num-badge">الدرس 9</span></div>
       <h1 class="lesson-title">تركيب الخلية النباتية والحيوانية</h1>
       <p style="color:var(--text-muted);font-size:.9rem">الغشاء · النواة · العضيات</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">📖 شرح الدرس</div>
       <p>الخلية أصغر وحدة حية. <strong>الخلية الحيوانية</strong> مستديرة ومرنة؛ <strong>الخلية النباتية</strong> لها جدار خلوي صلب وفجوة كبيرة وبلاستيدات خضراء.</p>
       <p>كلاهما يحتوي غشاءً ونواة وسيتوبلازماً، لكن النبات يصنع غذاءه بالتركيب الضوئي.</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">✦ معلومات مهمة</div>
       <ul class="fact-list">
@@ -56,15 +48,13 @@
         <li>الغشاء يتحكّم في دخول وخروج المواد.</li>
       </ul>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">🌟 هل تعلم؟</div>
-      <p>جسم الإنسان يضمّ تريليونات الخلايا، وكل خلية أصغر من رأس دبوس!</p>
+      <p>جسم الإنسان يحتوي نحو 37 تريليون خلية وكل خلية تؤدّي وظائفها المتخصصة!</p>
     </div>
-
     <div class="quiz-card">
       <div class="quiz-label">🎯 اختبر نفسك</div>
-      <div class="quiz-question">أين تُخزَّن المعلومات الوراثية في الخلية؟</div>
+      <div class="quiz-question">ما العضية التي تحمل المعلومات الوراثية؟</div>
       <div class="quiz-options">
         <button class="quiz-btn" data-correct="false">الميتوكوندريا</button>
         <button class="quiz-btn" data-correct="true" data-fb-ok="أحسنت! ✅ النواة تحمل المعلومات الوراثية.">النواة</button>
@@ -75,109 +65,184 @@
     </div>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="../js/scene-utils.js"></script>
 <script>
 var animalGrp, plantGrp, labelApi;
 
 function buildAnimalCell(g, labels) {
-  var mem = new THREE.Mesh(
-    new THREE.SphereGeometry(1.3, 32, 32),
-    matPhong(0x6366f1, { opacity: 0.12, shininess: 20 })
-  );
-  tagPart(mem, 'الغشاء الخلوي', 'غشاء رقيق يحمي الخلية ويتحكّم في مرور المواد.');
+  /* Cell membrane — translucent sphere */
+  var mem = new THREE.Mesh(new THREE.SphereGeometry(1.35, 48, 48),
+    new THREE.MeshStandardMaterial({ color: 0x7c6fd0, roughness: 0.25, metalness: 0.08,
+      transparent: true, opacity: 0.15, side: THREE.DoubleSide }));
+  tagPart(mem, 'الغشاء الخلوي', 'غشاء رقيق شبه منفذ يحيط بالخلية ويتحكّم في دخول وخروج المواد.');
   g.add(mem);
-  var wire = new THREE.Mesh(
-    new THREE.SphereGeometry(1.32, 24, 24),
-    new THREE.MeshBasicMaterial({ color: 0x818cf8, wireframe: true, transparent: true, opacity: 0.25 })
-  );
-  g.add(wire);
-  var nuc = mkSphere(0.45, 0x4f46e5, { emissive: 0x4338ca, ei: 0.2 });
-  tagPart(nuc, 'النواة', 'تحتوي المادة الوراثية وتتحكم في أنشطة الخلية.');
-  g.add(nuc);
-  labels.add(nuc, 'النواة');
-  for (var i = 0; i < 4; i++) {
-    var mit = mkCapsule(0.1, 0.35, 0xf59e0b);
-    var a = (i / 4) * Math.PI * 2;
-    mit.position.set(Math.cos(a) * 0.75, Math.sin(a) * 0.5, Math.sin(a) * 0.3);
-    mit.rotation.z = a;
-    tagPart(mit.children[0], 'الميتوكوندريا', 'تُنتج الطاقة اللازمة لعمل الخلية (التنفس الخلوي).');
-    tagPart(mit.children[1], 'الميتوكوندريا', 'تُنتج الطاقة اللازمة لعمل الخلية (التنفس الخلوي).');
-    tagPart(mit.children[2], 'الميتوكوندريا', 'تُنتج الطاقة اللازمة لعمل الخلية (التنفس الخلوي).');
-    g.add(mit);
+
+  /* Outer glow ring */
+  var outerGlow = new THREE.Mesh(new THREE.SphereGeometry(1.38, 40, 40),
+    new THREE.MeshStandardMaterial({ color: 0x9c8ff0, roughness: 0.30, transparent: true, opacity: 0.08, side: THREE.BackSide }));
+  g.add(outerGlow);
+
+  /* Cytoplasm (semi-transparent interior) */
+  var cyto = new THREE.Mesh(new THREE.SphereGeometry(1.28, 32, 32),
+    new THREE.MeshStandardMaterial({ color: 0x4a3fa0, roughness: 0.60, transparent: true, opacity: 0.10 }));
+  tagPart(cyto, 'السيتوبلازما', 'هلام شفاف يملأ الخلية ويحتوي العضيات؛ موقع كثير من التفاعلات الكيميائية.');
+  g.add(cyto);
+
+  /* Nucleus with nucleolus */
+  var nucEnv = new THREE.Mesh(new THREE.SphereGeometry(0.48, 32, 32),
+    new THREE.MeshStandardMaterial({ color: 0x6366f1, roughness: 0.30, metalness: 0.10,
+      emissive: 0x3330a0, emissiveIntensity: 0.25, transparent: true, opacity: 0.85 }));
+  tagPart(nucEnv, 'النواة 🧬', 'تحتوي الحمض النووي DNA وتتحكم في جميع أنشطة الخلية وانقسامها.');
+  g.add(nucEnv);
+  var nucleolus = new THREE.Mesh(new THREE.SphereGeometry(0.18, 20, 20),
+    new THREE.MeshStandardMaterial({ color: 0x9990ff, roughness: 0.25, emissive: 0x4444bb, emissiveIntensity: 0.40 }));
+  nucleolus.position.set(0.12, 0.10, 0.08);
+  tagPart(nucleolus, 'النويّة', 'مركز تصنيع الريبوسومات داخل النواة.');
+  g.add(nucleolus);
+  labels.add(nucEnv, 'النواة 🧬');
+
+  /* Mitochondria — bean shapes */
+  var mitPts = [
+    [0.72, 0.35, 0.28], [-0.68, 0.40, 0.22], [0.55, -0.55, 0.30],
+    [-0.50, -0.60, 0.25], [0.20, 0.75, 0.25]
+  ];
+  mitPts.forEach(function(p, i) {
+    var mitOuter = new THREE.Mesh(new THREE.SphereGeometry(0.16, 18, 18),
+      new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.38, metalness: 0.05,
+        emissive: 0x3a2000, emissiveIntensity: 0.15 }));
+    mitOuter.scale.set(1.3, 0.70, 0.75);
+    mitOuter.position.set(p[0], p[1], p[2]);
+    mitOuter.rotation.z = i * 0.6;
+    // Inner membrane suggestion
+    var mitInner = new THREE.Mesh(new THREE.SphereGeometry(0.09, 12, 12),
+      new THREE.MeshStandardMaterial({ color: 0xffc040, roughness: 0.45, emissive: 0x442200, emissiveIntensity: 0.30 }));
+    mitInner.scale.set(1.2, 0.55, 0.65);
+    mitOuter.add(mitInner);
+    tagPart(mitOuter, 'الميتوكوندريا ⚡', 'محطة توليد الطاقة. تُحوّل الجلوكوز والأكسجين إلى ATP (طاقة) عبر التنفس الخلوي.');
+    g.add(mitOuter);
+  });
+
+  /* Endoplasmic reticulum (wavy sheet) */
+  var erPts = [];
+  for (var ei = 0; ei < 20; ei++) {
+    erPts.push(new THREE.Vector3(-0.55 + ei*0.06, Math.sin(ei*0.55)*0.14, -0.35 + Math.cos(ei*0.45)*0.10));
   }
-  for (var j = 0; j < 8; j++) {
-    var rib = mkSphere(0.05, 0xec4899);
-    var aj = (j / 8) * Math.PI * 2;
-    rib.position.set(Math.cos(aj) * 0.95, Math.sin(aj) * 0.7, 0);
-    tagPart(rib, 'الريبوسومات', 'جسيمات صغيرة تصنع البروتينات في السيتوبلازما.');
+  var erCurve = new THREE.CatmullRomCurve3(erPts);
+  var erMesh = new THREE.Mesh(new THREE.TubeGeometry(erCurve, 24, 0.038, 8, false),
+    new THREE.MeshStandardMaterial({ color: 0x60a5fa, roughness: 0.45, transparent: true, opacity: 0.75 }));
+  tagPart(erMesh, 'الشبكة الإندوبلازمية', 'شبكة أغشية داخل الخلية؛ تنقل البروتينات وتُعالجها.');
+  g.add(erMesh);
+
+  /* Ribosomes — tiny dots */
+  for (var ri = 0; ri < 16; ri++) {
+    var rAngle = (ri/16)*Math.PI*2;
+    var rHeight = (ri%3-1)*0.4;
+    var rib = new THREE.Mesh(new THREE.SphereGeometry(0.042, 8, 8),
+      new THREE.MeshStandardMaterial({ color: 0xec4899, roughness: 0.42, emissive: 0x220011, emissiveIntensity: 0.20 }));
+    rib.position.set(Math.cos(rAngle)*0.85, rHeight, Math.sin(rAngle)*0.85);
+    tagPart(rib, 'الريبوسومات', 'جسيمات نانوية تُصنّع البروتينات استناداً لتعليمات DNA من النواة.');
     g.add(rib);
+  }
+
+  /* Golgi apparatus — stack of flat discs */
+  for (var gi = 0; gi < 4; gi++) {
+    var gDisc = new THREE.Mesh(new THREE.CylinderGeometry(0.24 - gi*0.02, 0.24 - gi*0.02, 0.05, 20),
+      new THREE.MeshStandardMaterial({ color: 0x34d399, roughness: 0.40, transparent: true, opacity: 0.80 }));
+    gDisc.scale.set(1.0, 1.0, 0.60);
+    gDisc.position.set(-0.30, -0.25 + gi*0.07, -0.55);
+    gDisc.rotation.x = 0.25;
+    tagPart(gDisc, 'جهاز جولجي', 'يُعدّل البروتينات ويُعبّئها في حويصلات للنقل أو الإفراز خارج الخلية.');
+    g.add(gDisc);
   }
 }
 
 function buildPlantCell(g, labels) {
-  var wall = new THREE.Mesh(
-    new THREE.BoxGeometry(2.2, 2.0, 1.6),
-    matPhong(0x65a30d, { opacity: 0.35, shininess: 30 })
-  );
-  tagPart(wall, 'الجدار الخلوي', 'طبقة صلبة خارج الغشاء تدعم شكل الخلية النباتية.');
+  /* Cell wall — thick box */
+  var wall = new THREE.Mesh(new THREE.BoxGeometry(2.30, 2.10, 1.70),
+    new THREE.MeshStandardMaterial({ color: 0x65a30d, roughness: 0.72, transparent: true, opacity: 0.30, side: THREE.DoubleSide }));
+  tagPart(wall, 'الجدار الخلوي', 'طبقة صلبة من السليلوز خارج الغشاء. تمنح الخلية النباتية شكلها المنتظم وتدعمها.');
   g.add(wall);
-  var mem = new THREE.Mesh(
-    new THREE.BoxGeometry(1.9, 1.7, 1.35),
-    matPhong(0x22c55e, { opacity: 0.15 })
-  );
-  tagPart(mem, 'الغشاء الخلوي', 'يحيط بالسيتوبلازما داخل الجدار الخلوي.');
+
+  /* Cell membrane */
+  var mem = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.80, 1.45),
+    new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.30, transparent: true, opacity: 0.14 }));
+  tagPart(mem, 'الغشاء الخلوي', 'يحيط بالسيتوبلازما داخل الجدار الخلوي. شبه منفذ.');
   g.add(mem);
-  var vac = new THREE.Mesh(
-    new THREE.SphereGeometry(0.55, 20, 20),
-    matPhong(0x93c5fd, { opacity: 0.35 })
-  );
-  vac.position.set(0.35, -0.15, 0);
-  tagPart(vac, 'الفجوة المركزية', 'تخزّن الماء والأملاح وتساعد على صلابة الخلية.');
+
+  /* Large central vacuole */
+  var vac = new THREE.Mesh(new THREE.SphereGeometry(0.62, 28, 28),
+    new THREE.MeshStandardMaterial({ color: 0x93c5fd, roughness: 0.15, metalness: 0.08,
+      transparent: true, opacity: 0.45, emissive: 0x002244, emissiveIntensity: 0.10 }));
+  vac.scale.set(1.10, 1.0, 0.95); vac.position.set(0.28, -0.12, 0.05);
+  tagPart(vac, 'الفجوة المركزية 💧', 'تملأ نحو 90% من حجم الخلية الناضجة. تخزّن الماء والأملاح وتساعد على صلابة الخلية بالضغط التورجي.');
   g.add(vac);
-  var nuc = mkSphere(0.38, 0x4f46e5, { emissive: 0x4338ca, ei: 0.15 });
-  nuc.position.set(-0.4, 0.2, 0);
-  tagPart(nuc, 'النواة', 'مركز التحكم في الخلية النباتية.');
+
+  /* Nucleus */
+  var nuc = new THREE.Mesh(new THREE.SphereGeometry(0.40, 28, 28),
+    new THREE.MeshStandardMaterial({ color: 0x4f46e5, roughness: 0.28, metalness: 0.10,
+      emissive: 0x2a208a, emissiveIntensity: 0.28, transparent: true, opacity: 0.90 }));
+  nuc.position.set(-0.40, 0.22, 0.05);
+  tagPart(nuc, 'النواة 🧬', 'مركز التحكم في الخلية النباتية — تحمل المعلومات الوراثية.');
   g.add(nuc);
-  labels.add(nuc, 'النواة');
-  for (var i = 0; i < 5; i++) {
-    var chl = mkSphere(0.18, 0x16a34a);
-    chl.scale.set(1.4, 0.35, 0.8);
-    var a = (i / 5) * Math.PI * 2;
-    chl.position.set(Math.cos(a) * 0.65, Math.sin(a) * 0.45, 0.2);
-    tagPart(chl, 'البلاستيدات الخضراء', 'تحتوي الكلوروفيل وتصنع الغذاء بالتركيب الضوئي.');
+  labels.add(nuc, 'النواة 🧬');
+
+  /* Chloroplasts — lens-shaped, vivid green */
+  var chlPositions = [
+    [0.62, 0.45, 0.30], [-0.60, 0.50, 0.25], [0.55, -0.40, 0.28],
+    [-0.55, -0.45, 0.22], [0.10, 0.62, 0.30], [-0.10, -0.68, 0.25]
+  ];
+  chlPositions.forEach(function(p, i) {
+    var chl = new THREE.Mesh(new THREE.SphereGeometry(0.20, 20, 20),
+      new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.40, metalness: 0.04,
+        emissive: 0x002800, emissiveIntensity: 0.22 }));
+    chl.scale.set(1.4, 0.42, 0.90); chl.position.set(p[0], p[1], p[2]); chl.rotation.z = i * 0.4;
+    // Thylakoid stack hint
+    var thy = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.04, 14),
+      new THREE.MeshStandardMaterial({ color: 0x22cc66, roughness: 0.38, emissive: 0x004400, emissiveIntensity: 0.30 }));
+    thy.scale.set(1.3, 1, 0.85);
+    chl.add(thy);
+    tagPart(chl, 'البلاستيدات الخضراء 🌿', 'تحتوي الكلوروفيل وتصنع الغذاء بالتركيب الضوئي: ضوء + ماء + CO₂ → سكر + O₂');
     g.add(chl);
+  });
+
+  /* Mitochondria (plants have them too) */
+  for (var mi = 0; mi < 3; mi++) {
+    var mitA = (mi/3)*Math.PI*2 + 0.8;
+    var mitM = new THREE.Mesh(new THREE.SphereGeometry(0.12, 14, 14),
+      new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.40, emissive: 0x3a2000, emissiveIntensity: 0.12 }));
+    mitM.scale.set(1.3, 0.65, 0.72);
+    mitM.position.set(Math.cos(mitA)*0.72, Math.sin(mitA)*0.55, -0.38);
+    tagPart(mitM, 'الميتوكوندريا ⚡', 'توجد في الخلية النباتية أيضاً لإنتاج الطاقة ليلاً أو في غياب الضوء.');
+    g.add(mitM);
   }
 }
 
 function switchCell(type) {
   animalGrp.visible = type === 'animal';
-  plantGrp.visible = type === 'plant';
+  plantGrp.visible  = type === 'plant';
   document.getElementById('tab-animal').classList.toggle('active', type === 'animal');
   document.getElementById('tab-plant').classList.toggle('active', type === 'plant');
   hidePartInfo();
   labelApi.clear();
-  if (type === 'animal') {
-    labelApi.add(animalGrp.children[2], 'النواة');
-  } else {
-    labelApi.add(plantGrp.children[3], 'النواة');
-  }
+  if (type === 'animal') labelApi.add(animalGrp.children[3], 'النواة 🧬');
+  else                   labelApi.add(plantGrp.children[3],  'النواة 🧬');
 }
 
 initScene('canvas-lesson-9', function(group, THREE, api) {
   labelApi = api.labels;
   animalGrp = new THREE.Group();
-  plantGrp = new THREE.Group();
+  plantGrp  = new THREE.Group();
   buildAnimalCell(animalGrp, api.labels);
   buildPlantCell(plantGrp, api.labels);
   group.add(animalGrp, plantGrp);
   plantGrp.visible = false;
-  api.labels.add(animalGrp.children[2], 'النواة');
+  api.labels.add(animalGrp.children[3], 'النواة 🧬');
+  group.traverse(function(o) { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
 }, { cameraZ: 5.5 });
 
 document.getElementById('tab-animal').onclick = function() { switchCell('animal'); };
-document.getElementById('tab-plant').onclick = function() { switchCell('plant'); };
+document.getElementById('tab-plant').onclick  = function() { switchCell('plant'); };
 bindQuiz();
 </script>
 </body>

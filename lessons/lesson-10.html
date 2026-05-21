@@ -8,12 +8,10 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
 </nav>
-
 <div class="lesson-layout">
   <div class="scene-panel">
     <canvas id="canvas-lesson-10"></canvas>
@@ -31,36 +29,28 @@
     </div>
     <div class="scene-hint">اختر وظيفة • انقر على الخلية</div>
   </div>
-
   <div class="info-panel">
     <div class="lesson-header">
-      <div class="lesson-meta">
-        <span class="grade-badge badge-6">الصف السادس</span>
-        <span class="lesson-num-badge">الدرس 10</span>
-      </div>
+      <div class="lesson-meta"><span class="grade-badge badge-6">الصف السادس</span><span class="lesson-num-badge">الدرس 10</span></div>
       <h1 class="lesson-title">وظائف الخلايا</h1>
       <p style="color:var(--text-muted);font-size:.9rem">التنفس · النمو · التكاثر</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">📖 شرح الدرس</div>
       <p>تؤدي الخلية <strong>التنفس الخلوي</strong> لإنتاج الطاقة، <strong>النمو</strong> بزيادة حجمها، و<strong>التكاثر</strong> بالانقسام لإنتاج خلايا جديدة.</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">✦ معلومات مهمة</div>
       <ul class="fact-list">
         <li>التنفس في الميتوكوندريا.</li>
-        <li>النمو يبني الأنسجة.</li>
+        <li>النمو يبني الأنسجة والأعضاء.</li>
         <li>الانقسام يُجدّد الجلد والدم.</li>
       </ul>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">🌟 هل تعلم؟</div>
-      <p>ملايين خلايا الجلد تُستبدل يومياً دون أن نلاحظ!</p>
+      <p>تنقسم خلايا الجلد كل 2–3 أسابيع وخلايا الدم الحمراء كل 120 يوماً!</p>
     </div>
-
     <div class="quiz-card">
       <div class="quiz-label">🎯 اختبر نفسك</div>
       <div class="quiz-question">أين يحدث التنفس الخلوي؟</div>
@@ -74,66 +64,122 @@
     </div>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="../js/scene-utils.js"></script>
 <script>
-var sceneRefs = { mode: 'resp', cellL: null, cellR: null, mit: [], growT: 0 };
+var SR = { mode: 'resp', cell: null, cellR: null, mit: [], chromatin: [] };
 
 initScene('canvas-lesson-10', function(group, THREE, api) {
-  var mem = mkSphere(0.62, 0x6366f1, { opacity: 0.25 });
-  tagPart(mem, 'الخلية', 'وحدة الحياة الأساسية؛ تنفّس وتنمو وتتكاثر.');
-  group.add(mem);
-  sceneRefs.cellL = mkSphere(0.55, 0x818cf8, { emissive: 0x6366f1, ei: 0.15 });
-  sceneRefs.cellL.position.x = 0;
-  tagPart(sceneRefs.cellL, 'الخلية', 'وحدة الحياة الأساسية.');
-  group.add(sceneRefs.cellL);
-  sceneRefs.cellR = mkSphere(0.55, 0x818cf8, { emissive: 0x6366f1, ei: 0.15 });
-  sceneRefs.cellR.visible = false;
-  sceneRefs.cellR.add(mkSphere(0.22, 0xec4899));
-  tagPart(sceneRefs.cellR, 'الخلية', 'خلية ابنة بعد الانقسام.');
-  group.add(sceneRefs.cellR);
+  /* Cell membrane */
+  var cellMem = new THREE.Mesh(new THREE.SphereGeometry(1.22, 48, 48),
+    new THREE.MeshStandardMaterial({ color: 0x6366f1, roughness: 0.22, metalness: 0.08,
+      transparent: true, opacity: 0.18, side: THREE.DoubleSide, emissive: 0x1a1a50, emissiveIntensity: 0.10 }));
+  tagPart(cellMem, 'الغشاء الخلوي', 'يحيط بالخلية ويتحكّم في دخول وخروج المواد.');
+  group.add(cellMem);
 
-  sceneRefs.cellL.add(mkSphere(0.22, 0xec4899));
+  /* Cytoplasm fill */
+  SR.cell = new THREE.Mesh(new THREE.SphereGeometry(1.15, 40, 40),
+    new THREE.MeshStandardMaterial({ color: 0x7c80f0, roughness: 0.55, transparent: true, opacity: 0.12 }));
+  tagPart(SR.cell, 'الخلية 🔬', 'وحدة الحياة الأساسية — تتنفس وتنمو وتنقسم.');
+  group.add(SR.cell);
 
-  for (var i = 0; i < 3; i++) {
-    var m = mkCapsule(0.08, 0.28, 0xf59e0b);
-    var a = (i / 3) * Math.PI * 2;
-    m.position.set(Math.cos(a) * 0.35, Math.sin(a) * 0.25, 0);
-    tagPart(m.children[0], 'الميتوكوندريا', 'هنا يحدث التنفس الخلوي وإنتاج الطاقة.');
-    sceneRefs.cellL.add(m);
-    sceneRefs.mit.push(m);
+  /* Nucleus */
+  var nuc = new THREE.Mesh(new THREE.SphereGeometry(0.42, 32, 32),
+    new THREE.MeshStandardMaterial({ color: 0x4f46e5, roughness: 0.28, metalness: 0.08,
+      emissive: 0x2a208a, emissiveIntensity: 0.30, transparent: true, opacity: 0.88 }));
+  tagPart(nuc, 'النواة 🧬', 'تحتوي DNA وتتحكّم في كل أنشطة الخلية.');
+  group.add(nuc);
+  api.labels.add(nuc, 'النواة 🧬');
+
+  /* Chromatin (DNA coils, visible during division) */
+  var chrMat = new THREE.MeshStandardMaterial({ color: 0xff4488, roughness: 0.35, emissive: 0x220011, emissiveIntensity: 0.30 });
+  for (var chi = 0; chi < 6; chi++) {
+    var chrPts = [];
+    var chAngle = (chi/6)*Math.PI*2;
+    for (var ck = 0; ck < 18; ck++) {
+      var cA = ck * 0.42 + chAngle;
+      chrPts.push(new THREE.Vector3(
+        Math.cos(cA)*(0.18 + Math.sin(ck*0.6)*0.06),
+        -0.14 + ck*0.02,
+        Math.sin(cA)*(0.18 + Math.sin(ck*0.6)*0.06)
+      ));
+    }
+    var chrCurve = new THREE.CatmullRomCurve3(chrPts);
+    var chr = new THREE.Mesh(new THREE.TubeGeometry(chrCurve, 18, 0.028, 6, false), chrMat.clone());
+    chr.visible = false;
+    tagPart(chr, 'الكروموسومات', 'DNA مضغوط في شكل كروموسومات استعداداً للانقسام.');
+    group.add(chr);
+    SR.chromatin.push(chr);
   }
-  api.labels.add(sceneRefs.cellL, 'الخلية');
+
+  /* Mitochondria */
+  var mitPositions = [
+    [0.68, 0.32, 0.28], [-0.65, 0.38, 0.22], [0.52, -0.52, 0.28],
+    [-0.48, -0.58, 0.22], [0.18, 0.70, 0.24]
+  ];
+  mitPositions.forEach(function(p) {
+    var m = new THREE.Mesh(new THREE.SphereGeometry(0.155, 18, 18),
+      new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.38,
+        emissive: 0x3a2000, emissiveIntensity: 0.20 }));
+    m.scale.set(1.30, 0.68, 0.75); m.position.set(p[0], p[1], p[2]);
+    tagPart(m, 'الميتوكوندريا ⚡', 'مصنع الطاقة — تُحوّل الجلوكوز إلى ATP عبر التنفس الخلوي.');
+    group.add(m);
+    SR.mit.push(m);
+  });
+
+  /* ATP particle (animated during respiration mode) */
+  var atpMat = new THREE.MeshStandardMaterial({ color: 0xffd700, roughness: 0.30, emissive: 0x443300, emissiveIntensity: 0.40 });
+  for (var ai = 0; ai < 8; ai++) {
+    var atp = new THREE.Mesh(new THREE.SphereGeometry(0.040, 8, 8), atpMat.clone());
+    atp.userData.orbit = { radius: 0.85, speed: 0.65 + ai*0.18, phase: ai*0.78, tilt: 0.55, z: 0.38 };
+    atp.userData.atpParticle = true;
+    tagPart(atp, 'جزيئات ATP', 'طاقة كيميائية مُنتجة بالتنفس الخلوي تُستخدم في جميع عمليات الخلية.');
+    group.add(atp);
+  }
+
+  /* Second daughter cell (appears in division mode) */
+  SR.cellR = new THREE.Mesh(new THREE.SphereGeometry(1.15, 40, 40),
+    new THREE.MeshStandardMaterial({ color: 0x7c80f0, roughness: 0.55,
+      transparent: true, opacity: 0.12, emissive: 0x101040, emissiveIntensity: 0.08 }));
+  SR.cellR.visible = false;
+  tagPart(SR.cellR, 'الخلية البنت', 'خلية جديدة تنتج عن انقسام الخلية الأم بعملية الانقسام الخيطي (الميتوز).');
+  group.add(SR.cellR);
+
+  group.traverse(function(o) { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
 }, {
-  cameraZ: 5,
+  cameraZ: 5.0,
   onAnimate: function(t, group, scene, camera, ctx) {
-    var mode = sceneRefs.mode;
+    var mode = SR.mode;
     if (mode === 'resp') {
-      sceneRefs.mit.forEach(function(m, i) {
-        var glow = 0.4 + 0.35 * Math.sin(t * 4 + i);
-        m.children.forEach(function(c) {
-          if (c.material) {
-            c.material.emissive.setHex(0xff6600);
-            c.material.emissiveIntensity = glow;
-          }
-        });
+      /* Mitochondria glow and pulse */
+      SR.mit.forEach(function(m, i) {
+        var glow = 0.20 + 0.30 * Math.sin(t * 4.5 + i * 1.2);
+        if (m.material) { m.material.emissive.setHex(0xff6600); m.material.emissiveIntensity = glow; }
+        var ps = 1 + 0.08 * Math.sin(t * 3.5 + i);
+        m.scale.set(1.30 * ps, 0.68 * ps, 0.75 * ps);
       });
-      sceneRefs.cellL.position.x = 0;
-      sceneRefs.cellR.visible = false;
-      sceneRefs.cellL.scale.setScalar(1);
+      SR.cell.scale.setScalar(1);
+      SR.cellR.visible = false;
+      SR.chromatin.forEach(function(c) { c.visible = false; });
     } else if (mode === 'grow') {
-      var gs = 1 + 0.15 * Math.sin(t * 0.8);
-      sceneRefs.cellL.scale.setScalar(gs);
-      sceneRefs.cellR.visible = false;
-      sceneRefs.cellL.position.x = 0;
+      SR.mit.forEach(function(m) { if (m.material) m.material.emissiveIntensity = 0.20; });
+      var gs = 1 + 0.20 * (0.5 + 0.5 * Math.sin(t * 0.7));
+      SR.cell.scale.setScalar(gs); SR.cell.parent.children[0].scale.setScalar(gs); // membrane
+      SR.cellR.visible = false;
+      SR.chromatin.forEach(function(c) { c.visible = false; });
     } else {
-      sceneRefs.cellR.visible = true;
-      var spread = 0.55 + 0.25 * (0.5 + 0.5 * Math.sin(t * 1.2));
-      sceneRefs.cellL.position.x = -spread;
-      sceneRefs.cellR.position.x = spread;
-      sceneRefs.cellL.scale.setScalar(1);
-      sceneRefs.cellR.scale.setScalar(1);
+      /* Division */
+      SR.mit.forEach(function(m) { if (m.material) m.material.emissiveIntensity = 0.12; });
+      var phase = (0.5 + 0.5 * Math.sin(t * 0.9));
+      var spread = 0.50 + phase * 0.85;
+      SR.cell.scale.setScalar(1);
+      SR.cell.position.x  = -spread;
+      SR.cellR.visible    = true;
+      SR.cellR.position.x = spread;
+      SR.cellR.scale.setScalar(phase * 1.0);
+      /* Chromatin visible mid-division */
+      var showChr = phase > 0.3 && phase < 0.75;
+      SR.chromatin.forEach(function(c) { c.visible = showChr; });
     }
   }
 });
@@ -142,8 +188,9 @@ document.querySelectorAll('.scene-mode-btns .scene-tab-btn').forEach(function(bt
   btn.addEventListener('click', function() {
     document.querySelectorAll('.scene-mode-btns .scene-tab-btn').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
-    sceneRefs.mode = btn.dataset.mode;
+    SR.mode = btn.dataset.mode;
     hidePartInfo();
+    if (SR.mode !== 'div') { SR.cell.position.x = 0; if (SR.cellR) SR.cellR.visible = false; }
   });
 });
 

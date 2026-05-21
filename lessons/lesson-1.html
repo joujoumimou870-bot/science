@@ -77,71 +77,113 @@
 <script src="../js/scene-utils.js"></script>
 <script>
 initScene('canvas-lesson-1', function(group, THREE, api) {
-  var skin = matPhong(0xf5deb3, { shininess: 50 });
-  function part(geo, mat, x, y, z, rx, rz) {
+  var skin  = new THREE.MeshStandardMaterial({ color: 0xf0c8a0, roughness: 0.55, metalness: 0.02, emissive: 0x180800, emissiveIntensity: 0.08 });
+  var skinD = new THREE.MeshStandardMaterial({ color: 0xd4a07a, roughness: 0.58, metalness: 0.02 });
+
+  /* ── HEAD ── */
+  var headG = new THREE.Group();
+  var skull  = new THREE.Mesh(new THREE.SphereGeometry(0.62, 48, 48), skin);
+  skull.scale.set(0.92, 1.08, 0.96);
+  var chin = new THREE.Mesh(new THREE.SphereGeometry(0.28, 24, 24), skin.clone());
+  chin.scale.set(0.82, 0.55, 0.80);
+  chin.position.set(0, -0.50, 0.18);
+  var cheekL = new THREE.Mesh(new THREE.SphereGeometry(0.22, 20, 20), skin.clone());
+  cheekL.scale.set(0.9, 0.7, 0.7); cheekL.position.set(-0.34, -0.18, 0.30);
+  var cheekR = cheekL.clone(); cheekR.position.x = 0.34;
+  // Subtle nose bridge
+  var nose = new THREE.Mesh(new THREE.SphereGeometry(0.10, 14, 14), skin.clone());
+  nose.scale.set(0.7, 0.5, 1.0); nose.position.set(0, -0.08, 0.58);
+  headG.add(skull, chin, cheekL, cheekR, nose);
+  headG.position.y = 2.18;
+  headG.scale.setScalar(0.88);
+  tagPartGroup([skull, chin, cheekL, cheekR, nose], 'الرأس 🧠', 'يحتوي الرأس على الدماغ الذي يتحكم في جميع وظائف الجسم، وعلى الحواس الخمس: العينان والأذنان والأنف والفم.');
+  group.add(headG);
+
+  /* ── NECK ── */
+  var neck = new THREE.Mesh(new THREE.CylinderGeometry(0.20, 0.24, 0.38, 18), skin.clone());
+  neck.position.y = 1.50;
+  group.add(neck);
+
+  /* ── TORSO via LatheGeometry ── */
+  var pts = [
+    new THREE.Vector2(0.14, 1.12),
+    new THREE.Vector2(0.52, 0.82),
+    new THREE.Vector2(0.54, 0.58),
+    new THREE.Vector2(0.50, 0.30),
+    new THREE.Vector2(0.42, 0.04),
+    new THREE.Vector2(0.36, -0.12),
+    new THREE.Vector2(0.44, -0.38),
+    new THREE.Vector2(0.56, -0.65),
+    new THREE.Vector2(0.52, -0.90),
+    new THREE.Vector2(0.22, -1.05),
+  ];
+  var torsoGeo = new THREE.LatheGeometry(pts, 32);
+  var torso = new THREE.Mesh(torsoGeo, skin.clone());
+  torso.castShadow = true;
+  group.add(torso);
+
+  /* ── ZONE overlays (interactive, semi-transparent) ── */
+  function zone(geo, color, x, y, z, ud, rz, sc) {
+    var mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.5, transparent: true, opacity: 0.35, emissive: color, emissiveIntensity: 0.12 });
     var m = new THREE.Mesh(geo, mat);
-    m.position.set(x || 0, y || 0, z || 0);
-    if (rx) m.rotation.x = rx;
-    if (rz) m.rotation.z = rz;
-    group.add(m);
-    return m;
-  }
-
-  part(new THREE.SphereGeometry(0.68, 24, 24), skin, 0, 2.0, 0);
-  part(new THREE.CylinderGeometry(0.22, 0.25, 0.4, 14), skin, 0, 1.45, 0);
-  part(new THREE.BoxGeometry(1.25, 1.75, 0.65), skin, 0, 0.4, 0);
-  [-0.9, 0.9].forEach(function(x) { part(new THREE.SphereGeometry(0.25, 12, 12), skin, x, 1.1, 0); });
-  [-0.95, 0.95].forEach(function(x) {
-    part(new THREE.CylinderGeometry(0.15, 0.13, 1.0, 12), skin, x, 0.55, 0, 0, x < 0 ? -0.25 : 0.25);
-    part(new THREE.CylinderGeometry(0.12, 0.11, 0.9, 12), skin, x, -0.3, 0, 0, x < 0 ? -0.3 : 0.3);
-    part(new THREE.BoxGeometry(0.22, 0.3, 0.12), skin, x, -0.88, 0);
-  });
-  part(new THREE.BoxGeometry(0.95, 0.38, 0.55), skin, 0, -0.6, 0);
-  [-0.32, 0.32].forEach(function(x) {
-    part(new THREE.CylinderGeometry(0.2, 0.17, 1.35, 12), skin, x, -1.55, 0);
-    part(new THREE.CylinderGeometry(0.14, 0.12, 1.25, 12), skin, x, -2.6, 0);
-    part(new THREE.BoxGeometry(0.3, 0.16, 0.55), skin, x, -3.3, 0.1);
-  });
-
-  function zone(geo, color, x, y, z, ud, rx, rz, sc) {
-    var m = new THREE.Mesh(geo, matPhong(color, { opacity: 0.42, shininess: 30 }));
     m.position.set(x, y, z);
-    if (rx) m.rotation.x = rx;
     if (rz) m.rotation.z = rz;
     if (sc) m.scale.set(sc[0], sc[1], sc[2]);
-    tagPart(m, ud.nameAr, ud.descAr);
+    tagPart(m, ud.n, ud.d);
     group.add(m);
     return m;
   }
 
-  var headZ = zone(new THREE.SphereGeometry(0.78, 20, 20), 0x3b82f6, 0, 2.0, 0.05, {
-    nameAr: 'الرأس 🧠',
-    descAr: 'يحتوي الرأس على الدماغ الذي يتحكم في جميع وظائف الجسم، وعلى الحواس الخمس: العينان والأذنان والأنف والفم.'
-  });
-  var torsoZ = zone(new THREE.BoxGeometry(1.38, 1.85, 0.72), 0xdc2626, 0, 0.4, 0, {
-    nameAr: 'الجذع 🫁',
-    descAr: 'يضم الجذع الأعضاء الحيوية كالقلب والرئتين والمعدة والكبد. ينقسم إلى قسمين: الصدر والبطن.'
-  });
-  var armUd = {
-    nameAr: 'الذراع 💪',
-    descAr: 'تتكون الأطراف العلوية من الذراعين واليدين، وتستخدم للإمساك والعمل والتفاعل مع البيئة.'
-  };
-  var legUd = {
-    nameAr: 'الساق 🦵',
-    descAr: 'الأطراف السفلية (الساقان والقدمان) تتيح لنا المشي والوقوف والتنقل من مكان إلى آخر.'
-  };
-  var armL = zone(new THREE.CylinderGeometry(0.22, 0.18, 2.35, 12), 0xfb923c, -0.95, 0.1, 0, armUd, 0, -0.28);
-  var armR = zone(new THREE.CylinderGeometry(0.22, 0.18, 2.35, 12), 0xfb923c, 0.95, 0.1, 0, armUd, 0, 0.28);
-  var legL = zone(new THREE.CylinderGeometry(0.26, 0.2, 2.9, 12), 0xfbbf24, -0.32, -2.1, 0, legUd);
-  var legR = zone(new THREE.CylinderGeometry(0.26, 0.2, 2.9, 12), 0xfbbf24, 0.32, -2.1, 0, legUd);
+  var headZ  = zone(new THREE.SphereGeometry(0.60, 24, 24), 0x3b82f6, 0, 2.18, 0, { n:'الرأس 🧠', d:'يحتوي الدماغ الذي يتحكم في جميع وظائف الجسم، وعلى الحواس الخمس.' }, 0, [0.92,1.08,0.96]);
+  var torsoZ = zone(new THREE.CylinderGeometry(0.56, 0.52, 1.95, 24), 0xdc2626, 0, 0.12, 0, { n:'الجذع 🫁', d:'يضم الأعضاء الحيوية: القلب، الرئتين، المعدة، الكبد. ينقسم إلى الصدر والبطن.' });
 
-  api.labels.add(headZ, 'الرأس 🧠', new THREE.Vector3(0, 0.5, 0));
-  api.labels.add(torsoZ, 'الجذع 🫁', new THREE.Vector3(0, 1.0, 0));
-  api.labels.add(armL, 'الذراع 💪', new THREE.Vector3(0, 1.0, 0));
-  api.labels.add(legL, 'الساق 🦵', new THREE.Vector3(0, 1.2, 0));
+  var armUd = { n:'الذراع 💪', d:'الأطراف العلوية: ذراعان ويدان تُستخدم للإمساك والعمل والتفاعل مع البيئة.' };
+  var legUd = { n:'الساق 🦵', d:'الأطراف السفلية: ساقان وقدمان تتيح المشي والوقوف والتنقل.' };
+
+  var armL = zone(new THREE.CylinderGeometry(0.20, 0.14, 2.40, 14), 0xfb923c, -1.00, 0.08, 0, armUd, -0.28);
+  var armR = zone(new THREE.CylinderGeometry(0.20, 0.14, 2.40, 14), 0xfb923c,  1.00, 0.08, 0, armUd,  0.28);
+  var legL = zone(new THREE.CylinderGeometry(0.24, 0.18, 3.00, 14), 0xfbbf24, -0.34, -2.15, 0, legUd);
+  var legR = zone(new THREE.CylinderGeometry(0.24, 0.18, 3.00, 14), 0xfbbf24,  0.34, -2.15, 0, legUd);
+
+  /* ── ARMS (detailed) ── */
+  var shldrMat = skin.clone();
+  [-1, 1].forEach(function(s) {
+    var shldr = new THREE.Mesh(new THREE.SphereGeometry(0.24, 20, 20), shldrMat.clone());
+    shldr.position.set(s * 0.82, 0.96, 0.06);
+    var uArm = new THREE.Mesh(new THREE.CylinderGeometry(0.155, 0.120, 0.92, 16), shldrMat.clone());
+    uArm.position.set(s * 1.00, 0.52, 0.04); uArm.rotation.z = s * 0.22;
+    var elbow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 16), skinD.clone());
+    elbow.position.set(s * 1.10, -0.04, 0.06);
+    var fArm = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.085, 0.82, 16), shldrMat.clone());
+    fArm.position.set(s * 1.10, -0.58, 0.04); fArm.rotation.z = s * 0.30;
+    var hand = new THREE.Mesh(new THREE.SphereGeometry(0.10, 14, 14), shldrMat.clone());
+    hand.scale.set(1.1, 0.65, 0.75); hand.position.set(s * 1.14, -1.08, 0.04);
+    group.add(shldr, uArm, elbow, fArm, hand);
+  });
+
+  /* ── LEGS (detailed) ── */
+  [-1, 1].forEach(function(s) {
+    var x = s * 0.34;
+    var thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.195, 0.155, 1.10, 18), shldrMat.clone());
+    thigh.position.set(x, -1.10, 0);
+    var knee = new THREE.Mesh(new THREE.SphereGeometry(0.155, 16, 16), skinD.clone());
+    knee.position.set(x, -1.70, 0.04);
+    var calf = new THREE.Mesh(new THREE.CylinderGeometry(0.135, 0.095, 1.0, 16), shldrMat.clone());
+    calf.position.set(x, -2.28, 0);
+    var foot = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), shldrMat.clone());
+    foot.scale.set(1.7, 0.55, 0.85); foot.position.set(x, -2.85, 0.12);
+    group.add(thigh, knee, calf, foot);
+  });
+
+  /* ── Labels ── */
+  api.labels.add(headZ,  'الرأس 🧠',  new THREE.Vector3(0, 0.5, 0));
+  api.labels.add(torsoZ, 'الجذع 🫁',  new THREE.Vector3(0, 1.0, 0));
+  api.labels.add(armL,   'الذراع 💪', new THREE.Vector3(0, 1.0, 0));
+  api.labels.add(legL,   'الساق 🦵',  new THREE.Vector3(0, 1.2, 0));
 
   group.position.y = 0.5;
-}, { cameraZ: 8 });
+  group.traverse(function(o) { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+}, { cameraZ: 9 });
 
 bindQuiz();
 </script>

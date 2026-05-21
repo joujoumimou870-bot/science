@@ -24,7 +24,7 @@
       <div class="part-info-name" id="part-name"></div>
       <div class="part-info-desc" id="part-desc"></div>
     </div>
-    <div class="scene-hint">انقر على عضو • اسحب للتدوير • دوِّر العجلة للتكبير</div>
+    <div class="scene-hint">انقر على عضو • شاهد الرئتين تتنفّسان</div>
   </div>
 
   <div class="info-panel">
@@ -79,19 +79,57 @@
 var lungsRef;
 
 initScene('canvas-lesson-3', function(group, THREE, api) {
-  var heart = buildHeart(group);
-  lungsRef = buildLungs(group);
-  var stom = buildStomach(group);
-  var trach = mkCyl(0.1, 0.1, 0.85, 0xfde68a);
-  trach.position.y = 1.05;
-  tagPart(trach, 'القصبة الهوائية', 'أنبوب ينقل الهواء من الحنجرة إلى الرئتين.');
-  group.add(trach);
+  /* Transparent torso shell for context */
+  var shell = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.72, 0.62, 2.85, 32),
+    new THREE.MeshStandardMaterial({ color: 0xf0c8a0, roughness: 0.55, transparent: true, opacity: 0.10, side: THREE.DoubleSide })
+  );
+  shell.position.y = 0.08;
+  group.add(shell);
 
-  api.labels.add(heart, 'القلب ❤️', new THREE.Vector3(0, 0.75, 0));
-  api.labels.add(lungsRef.lungL, 'الرئتان 🫁', new THREE.Vector3(0, 0.5, 0));
-  api.labels.add(stom, 'المعدة 🫃', new THREE.Vector3(0, 0.35, 0));
+  /* Rib cage suggestion */
+  var ribMat = new THREE.MeshStandardMaterial({ color: 0xf0e8d0, roughness: 0.55, transparent: true, opacity: 0.20 });
+  for (var ri = 0; ri < 6; ri++) {
+    var rib = new THREE.Mesh(new THREE.TorusGeometry(0.62 - ri * 0.02, 0.035, 8, 28, Math.PI * 1.85), ribMat.clone());
+    rib.rotation.x = Math.PI / 2;
+    rib.position.y = 0.90 - ri * 0.25;
+    group.add(rib);
+  }
+
+  /* Diaphragm */
+  var diaphG = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.68, 0.68, 0.06, 28),
+    new THREE.MeshStandardMaterial({ color: 0xd4a0b0, roughness: 0.60, transparent: true, opacity: 0.35 })
+  );
+  diaphG.position.y = -0.55;
+  group.add(diaphG);
+
+  /* Organs */
+  var heart  = buildHeart(group);
+  heart.position.set(-0.15, 0.15, 0.05);
+  heart.scale.setScalar(0.88);
+
+  lungsRef = buildLungs(group);
+
+  var stom = buildStomach(group);
+  stom.position.set(0.42, -1.18, 0.02);
+
+  /* Liver */
+  var liver = new THREE.Mesh(new THREE.SphereGeometry(0.48, 28, 28),
+    new THREE.MeshStandardMaterial({ color: 0x7b3c28, roughness: 0.48, emissive: 0x100500, emissiveIntensity: 0.10 }));
+  liver.scale.set(1.3, 0.72, 0.80); liver.position.set(-0.35, -0.98, 0.04);
+  tagPart(liver, 'الكبد 🔴', 'أكبر غدة في الجسم. يُنتج الصفراء، يُفكّك السموم، ويُخزّن الغليكوجين.');
+  group.add(liver);
+
+  /* Labels */
+  api.labels.add(heart,          'القلب ❤️',     new THREE.Vector3(0, 0.8, 0));
+  api.labels.add(lungsRef.lungL, 'الرئتان 🫁',   new THREE.Vector3(0, 0.5, 0));
+  api.labels.add(stom,           'المعدة 🫃',    new THREE.Vector3(0, 0.40, 0));
+  api.labels.add(liver,          'الكبد 🔴',     new THREE.Vector3(0, 0.40, 0));
+
+  group.traverse(function(o) { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
 }, {
-  cameraZ: 5,
+  cameraZ: 5.5,
   onAnimate: function(t) {
     if (lungsRef) animateLungs(lungsRef.lungL, lungsRef.lungR, t);
   }

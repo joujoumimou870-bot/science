@@ -8,12 +8,10 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
 </nav>
-
 <div class="lesson-layout">
   <div class="scene-panel">
     <canvas id="canvas-lesson-8"></canvas>
@@ -26,77 +24,199 @@
     </div>
     <div class="scene-hint">انقر على مجموعة الكائنات</div>
   </div>
-
   <div class="info-panel">
     <div class="lesson-header">
-      <div class="lesson-meta">
-        <span class="grade-badge badge-5">الصف الخامس</span>
-        <span class="lesson-num-badge">الدرس 8</span>
-      </div>
+      <div class="lesson-meta"><span class="grade-badge badge-5">الصف الخامس</span><span class="lesson-num-badge">الدرس 8</span></div>
       <h1 class="lesson-title">تصنيف الكائنات الحية</h1>
       <p style="color:var(--text-muted);font-size:.9rem">نباتات · حيوانات · كائنات دقيقة</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">📖 شرح الدرس</div>
       <p>نُصنّف الكائنات إلى <strong>نباتات</strong> (منتجة)، <strong>حيوانات</strong> (مستهلكة)، و<strong>كائنات دقيقة</strong> مثل البكتيريا.</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">✦ معلومات مهمة</div>
       <ul class="fact-list">
-        <li>النباتات: تركيب ضوئي.</li>
+        <li>النباتات: تركيب ضوئي — تصنع غذاءها.</li>
         <li>الحيوانات: تتغذّى على غيرها.</li>
-        <li>البكتيريا: أحادية الخلية.</li>
+        <li>البكتيريا: أحادية الخلية، مجهرية.</li>
       </ul>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">🌟 هل تعلم؟</div>
-      <p>بكتيريا مفيدة تصنع الجبن وتساعد على الهضم!</p>
+      <p>بكتيريا مفيدة تصنع الجبن وتساعد على الهضم! وعدد الكائنات الدقيقة في جسمنا يفوق عدد خلايانا!</p>
     </div>
-
     <div class="quiz-card">
       <div class="quiz-label">🎯 اختبر نفسك</div>
-      <div class="quiz-question">أيّ مجموعة كائنات دقيقة؟</div>
+      <div class="quiz-question">ما الكائن الذي يصنع غذاءه بنفسه؟</div>
       <div class="quiz-options">
-        <button class="quiz-btn" data-correct="false">الأشجار</button>
-        <button class="quiz-btn" data-correct="false">الأسماك</button>
-        <button class="quiz-btn" data-correct="true" data-fb-ok="أحسنت! ✅ البكتيريا.">البكتيريا</button>
-        <button class="quiz-btn" data-correct="false">الطيور</button>
+        <button class="quiz-btn" data-correct="false">الأسد</button>
+        <button class="quiz-btn" data-correct="false">البكتيريا</button>
+        <button class="quiz-btn" data-correct="true" data-fb-ok="أحسنت! ✅ النبات يصنع غذاءه بالتركيب الضوئي.">النبات</button>
+        <button class="quiz-btn" data-correct="false">الإنسان</button>
       </div>
       <div class="quiz-feedback" id="quiz-fb"></div>
     </div>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="../js/scene-utils.js"></script>
 <script>
+function makeLeafShape(size, color) {
+  var shape = new THREE.Shape();
+  shape.moveTo(0, 0);
+  shape.bezierCurveTo(size*.5, size*.6, size*.9, size*.9, 0, size);
+  shape.bezierCurveTo(-size*.9, size*.9, -size*.5, size*.6, 0, 0);
+  return new THREE.Mesh(new THREE.ShapeGeometry(shape, 14),
+    new THREE.MeshStandardMaterial({ color: color, roughness: 0.62, metalness: 0, side: THREE.DoubleSide }));
+}
+
 initScene('canvas-lesson-8', function(group, THREE, api) {
-  var data = [
-    { color: 0x4ade80, x: -1.4, nameAr: 'النباتات 🌿', descAr: 'كائنات منتجة تصنع غذاءها من الضوء والماء وثاني أكسيد الكربون.' },
-    { color: 0xfb923c, x: 0, nameAr: 'الحيوانات 🐾', descAr: 'كائنات مستهلكة: عاشبة تأكل النباتات أو لاحمة تأكل غيرها.' },
-    { color: 0xa78bfa, x: 1.4, nameAr: 'الكائنات الدقيقة 🔬', descAr: 'بكتيريا وفطريات وغيرها — صغيرة جداً لكن مؤثرة في الطبيعة.' }
-  ];
-  data.forEach(function(d) {
-    var tree = mkCyl(0.08, 0.12, 0.5, 0x65a30d);
-    tree.position.set(d.x, -0.35, 0);
-    var big = mkSphere(0.45, d.color, { emissive: d.color, ei: 0.12 });
-    big.position.set(d.x, 0.15, 0);
-    tagPart(big, d.nameAr, d.descAr);
-    tagPart(tree, d.nameAr, d.descAr);
-    group.add(tree, big);
-    for (var j = 0; j < 3; j++) {
-      var s = mkSphere(0.12, d.color);
-      var a = (j / 3) * Math.PI * 2;
-      s.position.set(d.x + Math.cos(a) * 0.62, Math.sin(a) * 0.45, 0);
-      tagPart(s, d.nameAr, d.descAr);
-      group.add(s);
-    }
-    api.labels.add(big, d.nameAr.split(' ')[0]);
+  /* ── PLANT (left) ── */
+  var plantG = new THREE.Group();
+  plantG.position.set(-1.55, 0, 0);
+
+  var stemCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0,-1.0,0), new THREE.Vector3(0.05,-0.5,0.02),
+    new THREE.Vector3(-0.04,0,-.01), new THREE.Vector3(0,0.6,0), new THREE.Vector3(0,1.0,0)
+  ]);
+  var stem = new THREE.Mesh(new THREE.TubeGeometry(stemCurve, 20, 0.060, 10, false),
+    new THREE.MeshStandardMaterial({ color: 0x2e8b28, roughness: 0.60, emissive: 0x001000, emissiveIntensity: 0.06 }));
+  tagPart(stem, 'النباتات 🌿', 'كائنات منتجة تصنع غذاءها من الضوء والماء وثاني أكسيد الكربون بعملية التركيب الضوئي.');
+  plantG.add(stem);
+
+  var leafAngles = [-0.8, 0.8, -0.6, 0.6, -0.5];
+  var leafHeights = [-0.55, -0.55, -0.10, -0.10, 0.35];
+  leafAngles.forEach(function(rz, i) {
+    var leaf = makeLeafShape(0.38, i % 2 === 0 ? 0x28a830 : 0x35c440);
+    leaf.position.set(rz < 0 ? -0.22 : 0.22, leafHeights[i], 0);
+    leaf.rotation.set(0.1, 0, rz);
+    tagPart(leaf, 'النباتات 🌿', 'كائنات منتجة تصنع غذاءها من الضوء والماء وثاني أكسيد الكربون.');
+    plantG.add(leaf);
   });
-}, { cameraZ: 5 });
+
+  // Flower on top
+  var flowerCtr = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16),
+    new THREE.MeshStandardMaterial({ color: 0xffd000, roughness: 0.40, emissive: 0x221200, emissiveIntensity: 0.15 }));
+  flowerCtr.position.y = 1.08;
+  tagPart(flowerCtr, 'النباتات 🌿', 'كائنات منتجة تصنع غذاءها من الضوء والماء.');
+  for (var pi = 0; pi < 6; pi++) {
+    var pa = (pi/6)*Math.PI*2;
+    var petal = new THREE.Mesh(new THREE.SphereGeometry(0.08, 10, 10),
+      new THREE.MeshStandardMaterial({ color: 0xff88bb, roughness: 0.40 }));
+    petal.scale.set(0.8, 0.5, 0.5);
+    petal.position.set(Math.cos(pa)*0.22, 1.08, Math.sin(pa)*0.22);
+    tagPart(petal, 'النباتات 🌿', 'كائنات منتجة تصنع غذاءها.');
+    plantG.add(petal);
+  }
+  plantG.add(flowerCtr);
+  flowerCtr.userData.pulse = { min: 0.94, max: 1.06, speed: 1.8 };
+  plantG.userData.wobble = { speed: 0.7, amp: 0.04 };
+  group.add(plantG);
+  api.labels.add(stem, 'النباتات 🌿', new THREE.Vector3(0, 0.6, 0));
+
+  /* ── ANIMAL (centre) — stylised rabbit ── */
+  var animalG = new THREE.Group();
+  var skinMat = new THREE.MeshStandardMaterial({ color: 0xdeb887, roughness: 0.65 });
+  // Body
+  var body = new THREE.Mesh(new THREE.SphereGeometry(0.50, 28, 28), skinMat);
+  body.scale.set(0.85, 1.05, 0.80); body.position.y = -0.20;
+  // Head
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.32, 24, 24), skinMat.clone());
+  head.scale.set(0.92, 0.98, 0.90); head.position.y = 0.62;
+  // Ears
+  [-0.15, 0.15].forEach(function(ex) {
+    var ear = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.58, 12), skinMat.clone());
+    ear.position.set(ex, 1.05, -0.04); ear.rotation.z = ex < 0 ? -0.15 : 0.15;
+    var earInner = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.52, 10),
+      new THREE.MeshStandardMaterial({ color: 0xffaaaa, roughness: 0.65 }));
+    earInner.position.y = 0.02;
+    ear.add(earInner);
+    animalG.add(ear);
+  });
+  // Eyes
+  [-0.12, 0.12].forEach(function(ex) {
+    var eye = new THREE.Mesh(new THREE.SphereGeometry(0.042, 10, 10),
+      new THREE.MeshStandardMaterial({ color: 0x330000, roughness: 0.20 }));
+    eye.position.set(ex, 0.68, 0.28);
+    animalG.add(eye);
+  });
+  // Nose
+  var nse = new THREE.Mesh(new THREE.SphereGeometry(0.032, 8, 8),
+    new THREE.MeshStandardMaterial({ color: 0xff8888, roughness: 0.55 }));
+  nse.position.set(0, 0.55, 0.32);
+  // Tail
+  var tail = new THREE.Mesh(new THREE.SphereGeometry(0.12, 14, 14),
+    new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.80 }));
+  tail.position.set(0, -0.55, -0.48);
+  // Front legs
+  [-0.22, 0.22].forEach(function(ex) {
+    var leg = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.48, 12), skinMat.clone());
+    leg.position.set(ex, -0.60, 0.24); leg.rotation.x = 0.3;
+    animalG.add(leg);
+  });
+  // Back legs
+  [-0.22, 0.22].forEach(function(ex) {
+    var bleg = new THREE.Mesh(new THREE.SphereGeometry(0.18, 14, 14), skinMat.clone());
+    bleg.scale.set(0.6, 0.55, 1.30); bleg.position.set(ex, -0.62, -0.28);
+    animalG.add(bleg);
+  });
+  animalG.add(body, head, nse, tail);
+  tagPartGroup([body, head, nse, tail], 'الحيوانات 🐇', 'كائنات مستهلكة تتغذّى على النباتات أو الحيوانات الأخرى. تتنفّس وتتحرّك وتتكاثر جنسياً في معظمها.');
+  animalG.position.set(0, 0, 0);
+  animalG.userData.wobble = { speed: 1.2, amp: 0.05 };
+  group.add(animalG);
+  api.labels.add(body, 'الحيوانات 🐇', new THREE.Vector3(0, 0.6, 0));
+
+  /* ── MICROORGANISM (right) — bacterium ── */
+  var microG = new THREE.Group();
+  microG.position.set(1.55, 0, 0);
+
+  var bacterium = new THREE.Mesh(new THREE.SphereGeometry(0.45, 32, 32),
+    new THREE.MeshStandardMaterial({ color: 0xa78bfa, roughness: 0.38, metalness: 0.05, emissive: 0x0a0022, emissiveIntensity: 0.15 }));
+  bacterium.scale.set(0.72, 1.38, 0.72);
+  tagPart(bacterium, 'الكائنات الدقيقة 🔬', 'بكتيريا وفطريات وفيروسات — أحادية الخلية أو بدائية. منها المفيد (يصنع الجبن، يساعد على الهضم) ومنها الضار.');
+  microG.add(bacterium);
+
+  // Flagella (whip-like tails for movement)
+  for (var fi = 0; fi < 5; fi++) {
+    var flagAngle = (fi / 5) * Math.PI * 2;
+    var flagPts = [];
+    for (var fk = 0; fk < 12; fk++) {
+      flagPts.push(new THREE.Vector3(
+        Math.cos(flagAngle) * (0.42 + fk * 0.06) + Math.sin(fk * 0.8) * 0.06,
+        -0.62 - fk * 0.10 + Math.cos(fk * 0.9) * 0.05,
+        Math.sin(flagAngle) * (0.42 + fk * 0.06)
+      ));
+    }
+    var flagCurve = new THREE.CatmullRomCurve3(flagPts);
+    var flag = new THREE.Mesh(new THREE.TubeGeometry(flagCurve, 14, 0.018, 6, false),
+      new THREE.MeshStandardMaterial({ color: 0xc4b5fd, roughness: 0.40 }));
+    tagPart(flag, 'الكائنات الدقيقة 🔬', 'أسواط تساعد البكتيريا على الحركة في السوائل.');
+    microG.add(flag);
+  }
+
+  // Fission bubbles (binary fission)
+  for (var bi = 0; bi < 3; bi++) {
+    var bud = new THREE.Mesh(new THREE.SphereGeometry(0.15 - bi*0.03, 14, 14),
+      new THREE.MeshStandardMaterial({ color: 0xb9a8ff, roughness: 0.40, transparent: true, opacity: 0.7 - bi*0.15 }));
+    bud.position.set((Math.random()-0.5)*1.2, 0.6 + bi*0.32, (Math.random()-0.5)*0.5);
+    bud.userData.floatSpeed = 0.8 + bi * 0.3; bud.userData.floatBase = bud.position.y; bud.userData.floatAmp = 0.06;
+    microG.add(bud);
+  }
+
+  microG.userData.spinY = 0.012;
+  group.add(microG);
+  api.labels.add(bacterium, 'الكائنات الدقيقة 🔬', new THREE.Vector3(0, 0.55, 0));
+
+  /* Ground */
+  var ground = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 2.8, 0.12, 32),
+    new THREE.MeshStandardMaterial({ color: 0x2a4a18, roughness: 0.90 }));
+  ground.position.y = -1.32;
+  group.add(ground);
+
+  group.traverse(function(o) { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+}, { cameraZ: 6.0 });
 
 bindQuiz();
 </script>

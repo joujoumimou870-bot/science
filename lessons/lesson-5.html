@@ -8,12 +8,10 @@
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
 <nav class="navbar">
   <div class="navbar-brand">🔬 الأحياء بالواقع التفاعلي</div>
   <a href="../index.html" class="nav-back">← العودة للرئيسية</a>
 </nav>
-
 <div class="lesson-layout">
   <div class="scene-panel">
     <canvas id="canvas-lesson-5"></canvas>
@@ -26,23 +24,17 @@
     </div>
     <div class="scene-hint">انقر على عضو • شاهد الرئتين تتنفّسان</div>
   </div>
-
   <div class="info-panel">
     <div class="lesson-header">
-      <div class="lesson-meta">
-        <span class="grade-badge badge-5">الصف الخامس</span>
-        <span class="lesson-num-badge">الدرس 5</span>
-      </div>
+      <div class="lesson-meta"><span class="grade-badge badge-5">الصف الخامس</span><span class="lesson-num-badge">الدرس 5</span></div>
       <h1 class="lesson-title">الجهاز التنفسي ووظيفته</h1>
       <p style="color:var(--text-muted);font-size:.9rem">الأنف · القصبة · الرئتان</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">📖 شرح الدرس</div>
       <p>الجهاز التنفسي يُدخل <strong>الأكسجين</strong> ويُخرج <strong>ثاني أكسيد الكربون</strong>. يمرّ الهواء من الأنف والفم عبر القصبة الهوائية إلى الرئتين.</p>
       <p>داخل الرئتين ملايين الحويصلات حيث يتبادل الدم الغازات مع الهواء.</p>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">✦ معلومات مهمة</div>
       <ul class="fact-list">
@@ -52,12 +44,10 @@
         <li>الحجاب الحاجز يحرّك الصدر عند التنفّس.</li>
       </ul>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">🌟 هل تعلم؟</div>
       <p>سطح تبادل الغازات في الرئتين يساوي مساحة ملعب تنس!</p>
     </div>
-
     <div class="quiz-card">
       <div class="quiz-label">🎯 اختبر نفسك</div>
       <div class="quiz-question">ما الغاز الذي تمتصّه الرئتان من الهواء؟</div>
@@ -71,36 +61,92 @@
     </div>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="../js/scene-utils.js"></script>
 <script>
 var lungsRef;
 
 initScene('canvas-lesson-5', function(group, THREE, api) {
-  var nose = mkSphere(0.2, 0xfde68a);
-  nose.position.y = 2.1;
-  tagPart(nose, 'الأنف 👃', 'مدخل الهواء الذي يُرشّح ويُدفّئ الهواء قبل وصوله للرئتين.');
-  group.add(nose);
+  /* Nose */
+  var noseG = new THREE.Group();
+  noseG.position.set(0, 2.12, 0.25);
+  var nBridge = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 20),
+    new THREE.MeshStandardMaterial({ color: 0xf5c090, roughness: 0.55 }));
+  nBridge.scale.set(0.7, 1.1, 0.9);
+  var nL = new THREE.Mesh(new THREE.SphereGeometry(0.09, 14, 14),
+    new THREE.MeshStandardMaterial({ color: 0xf0a878, roughness: 0.58 }));
+  nL.position.set(-0.13, -0.10, 0.06);
+  var nR = nL.clone(); nR.position.x = 0.13;
+  noseG.add(nBridge, nL, nR);
+  tagPartGroup([nBridge, nL, nR], 'الأنف 👃', 'مدخل الهواء الذي يُرشّحه ويُدفّئه ويُرطّبه قبل وصوله للرئتين. يحمل 20,000 ليفة عصبية شمّية.');
+  group.add(noseG);
 
-  var trach = mkCyl(0.12, 0.12, 1.35, 0xfde68a);
-  trach.position.y = 1.25;
-  tagPart(trach, 'القصبة الهوائية', 'أنبوب يصل الحنجرة بالرئتين وينقسم إلى قصبتين رئيسيتين.');
-  group.add(trach);
+  /* Pharynx */
+  var pharynx = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.55, 16),
+    new THREE.MeshStandardMaterial({ color: 0xf0a888, roughness: 0.55 }));
+  pharynx.position.y = 1.62;
+  tagPart(pharynx, 'البلعوم', 'ممرّ مشترك للهواء والغذاء يصل الأنف والفم بالقصبة والمريء.');
+  group.add(pharynx);
 
+  /* Larynx (voice box) */
+  var larynx = new THREE.Mesh(new THREE.SphereGeometry(0.16, 18, 18),
+    new THREE.MeshStandardMaterial({ color: 0xd4a080, roughness: 0.58, metalness: 0.06 }));
+  larynx.scale.set(0.9, 0.7, 0.85); larynx.position.y = 1.28;
+  tagPart(larynx, 'الحنجرة 🗣️', 'تحتوي على الأحبال الصوتية التي تُنتج الصوت. تمنع الطعام من دخول الرئتين.');
+  group.add(larynx);
+
+  /* Trachea with cartilage rings */
+  var trMat = new THREE.MeshStandardMaterial({ color: 0xfde68a, roughness: 0.42 });
+  var trCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0, 1.18, 0), new THREE.Vector3(0, 0.85, 0.02),
+    new THREE.Vector3(0, 0.52, 0.01), new THREE.Vector3(0, 0.20, 0)
+  ]);
+  var trMesh = new THREE.Mesh(new THREE.TubeGeometry(trCurve, 20, 0.090, 14, false), trMat);
+  tagPart(trMesh, 'القصبة الهوائية', 'أنبوب محاط بحلقات غضروفية تمنع انهياره. ينقل الهواء من الحنجرة إلى الرئتين.');
+  group.add(trMesh);
+
+  /* Cartilage rings on trachea */
+  var ringMat = new THREE.MeshStandardMaterial({ color: 0xf5e090, roughness: 0.40 });
+  for (var ri = 0; ri < 8; ri++) {
+    var ry = 1.10 - ri * 0.115;
+    var ring = new THREE.Mesh(new THREE.TorusGeometry(0.092, 0.022, 8, 20, Math.PI * 1.8), ringMat.clone());
+    ring.position.y = ry; ring.rotation.x = Math.PI / 2;
+    group.add(ring);
+  }
+
+  /* Lungs */
   lungsRef = buildLungs(group);
-  [-0.55, 0.55].forEach(function(x) {
-    var b = mkCyl(0.08, 0.08, 0.6, 0xfde68a);
-    b.rotation.z = x < 0 ? -0.75 : 0.75;
-    b.position.set(x * 0.9, 0.65, 0);
-    group.add(b);
-  });
 
-  api.labels.add(trach, 'القصبة الهوائية', new THREE.Vector3(0, 0.7, 0));
-  api.labels.add(lungsRef.lungL, 'الرئتان 🫁', new THREE.Vector3(0, 0.4, 0));
-}, { cameraZ: 5.5, onAnimate: function(t) {
-  if (lungsRef) animateLungs(lungsRef.lungL, lungsRef.lungR, t);
-}});
+  /* Diaphragm */
+  var diaphMat = new THREE.MeshStandardMaterial({ color: 0xd4a0b0, roughness: 0.60, transparent: true, opacity: 0.40 });
+  var diaph = new THREE.Mesh(new THREE.CylinderGeometry(1.02, 1.08, 0.07, 30), diaphMat);
+  diaph.position.y = -1.62;
+  tagPart(diaph, 'الحجاب الحاجز', 'عضلة تفصل الصدر عن البطن. حركته تُسبّب التنفس: ينزل عند الشهيق ويرتفع عند الزفير.');
+  group.add(diaph);
+
+  /* Alveoli cluster (tiny sacs) */
+  var alveoliG = new THREE.Group();
+  alveoliG.position.set(-0.85, -0.50, 0.55);
+  var alvMat = new THREE.MeshStandardMaterial({ color: 0xe89898, roughness: 0.55, transparent: true, opacity: 0.85 });
+  for (var ai = 0; ai < 12; ai++) {
+    var alv = new THREE.Mesh(new THREE.SphereGeometry(0.07 + Math.random()*0.04, 10, 10), alvMat.clone());
+    alv.position.set((Math.random()-0.5)*0.35, (Math.random()-0.5)*0.35, (Math.random()-0.5)*0.22);
+    tagPart(alv, 'الحويصلات الهوائية', 'كيس هوائي صغير جداً يحاط بالشعيرات الدموية؛ مكان تبادل الأكسجين وثاني أكسيد الكربون.');
+    alveoliG.add(alv);
+  }
+  group.add(alveoliG);
+
+  api.labels.add(trMesh,         'القصبة الهوائية', new THREE.Vector3(0, 0.6, 0));
+  api.labels.add(lungsRef.lungL, 'الرئتان 🫁',      new THREE.Vector3(0, 0.5, 0));
+  api.labels.add(diaph,          'الحجاب الحاجز',  new THREE.Vector3(0, 0, 0));
+
+  group.traverse(function(o) { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+}, {
+  cameraZ: 6.0,
+  onAnimate: function(t) {
+    if (lungsRef) animateLungs(lungsRef.lungL, lungsRef.lungR, t);
+  }
+});
 
 bindQuiz();
 </script>
